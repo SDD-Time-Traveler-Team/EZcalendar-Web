@@ -1,20 +1,15 @@
 import './App.css';
-import './component/fullcalendar'
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
+import CalendarUI from './components/CalendarUI'
 import React from "react";
 
-function App() {
-  return (
-      <>
-          <body>
-            <FullCalendar
-                plugins={[ dayGridPlugin ]}
-                initialView="dayGridMonth"
-            />
-          </body>
-      </>
-  );
+class App extends React.Component {
+    render(){
+        return (
+            <>
+                <CalendarUI/>
+            </>
+        );
+    }
 }
 
 export default App;
