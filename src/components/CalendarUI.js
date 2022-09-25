@@ -1,12 +1,18 @@
 import React from 'react'
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import WeeklyViewUI from "./WeeklyViewUI";
+import MonthlyViewUI from "./MonthlyViewUI";
 
-function fullCalendar() {
-        return (
-            <FullCalendar
-                plugins={[ dayGridPlugin ]}
-                initialView="dayGridMonth"
-            />
-        )
+class CalendarUI extends React.Component {
+        state = {view:'weekly'};
+
+        render() {
+            return(<>
+                    <WeeklyViewUI/>
+                    <MonthlyViewUI/>
+            </>
+
+            )
+        }
 }
+
+export default CalendarUI;
