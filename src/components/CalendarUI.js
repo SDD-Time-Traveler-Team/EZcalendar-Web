@@ -1,14 +1,12 @@
 import React from 'react'
-import WeeklyViewUI from "./WeeklyViewUI";
-import MonthlyViewUI from "./MonthlyViewUI";
+import CalendarViewUI from "./CalendarViewUI";
 
 class CalendarUI extends React.Component {
-        state = {view:'weekly'};
 
         render() {
-            return(<>
-                    <WeeklyViewUI/>
-                    <MonthlyViewUI/>
+            return(
+            <>
+                <CalendarViewUI/>
             </>
 
             )
