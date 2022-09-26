@@ -12,18 +12,9 @@ class CalendarViewUI extends React.Component {
         return(
             <FullCalendar
                 plugins={[ dayGridPlugin, timeGridPlugin,interactionPlugin]}
-                initialView="dayGridMonth"
+                initialView="timeGridWeek"
                 headerToolbar = {{
-                    center: 'New dayGridMonth,timeGridWeek,timeGridDay',
-                }}
-                customButtons= {{
-                    New:{
-                        text: 'New(Event/Task)',
-                        click: function(){
-                            alert("Click New");
-                        },
-                    }
-                    
+                    center: 'dayGridMonth,timeGridWeek,timeGridDay',
                 }}
             />
         )
