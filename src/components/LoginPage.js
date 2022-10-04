@@ -4,11 +4,11 @@ import React from 'react';
 class LoginPage extends React.Component {
 
   render () {
-    const onFinish = (values) => {
+    const onLogin = (values) => {
       console.log('Success:', values);
     };
   
-    const onFinishFailed = (errorInfo) => {
+    const onLoginFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
     };
 
@@ -28,8 +28,8 @@ class LoginPage extends React.Component {
           style={{
             width: '100%',
           }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+          onFinish={onLogin}
+          onFinishFailed={onLoginFailed}
           autoComplete="off"
         >
           <Form.Item

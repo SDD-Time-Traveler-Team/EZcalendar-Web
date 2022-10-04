@@ -39,7 +39,7 @@ import {
   
   const SignupPage = () => {
 
-    const onFinish = (values) => {
+    const onSignup = (values) => {
       console.log('Received values of form: ', values);
     };
 
@@ -48,7 +48,7 @@ import {
         <Form
           {...formItemLayout}
           name="register"
-          onFinish={onFinish}
+          onFinish={onSignup}
           scrollToFirstError
           style={{
             width: '100%',
