@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Row, Col } from 'antd';
+import { Button, Checkbox, Form, Input, Row } from 'antd';
 import React from 'react';
 
 class LoginPage extends React.Component {
@@ -32,7 +32,7 @@ class LoginPage extends React.Component {
           onFinishFailed={onLoginFailed}
           autoComplete="off"
         >
-          <Form.Item
+          <Form.Item required={false}
             name="email"
             label="E-mail"
             rules={[
@@ -49,7 +49,7 @@ class LoginPage extends React.Component {
             <Input />
           </Form.Item>
     
-          <Form.Item
+          <Form.Item required={false}
             label="Password"
             name="password"
             rules={[
@@ -80,7 +80,7 @@ class LoginPage extends React.Component {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Sign in
             </Button> Or <a href="/signup">register now!</a>
           </Form.Item>
         </Form>
