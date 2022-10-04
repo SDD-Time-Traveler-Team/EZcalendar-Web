@@ -4,14 +4,19 @@ import awsconfig from './aws-exports';
 class Authentication {
 
     /*Request Amplify CLI for all services */
-    
+
     constructor(){
+        if(Authentication._instance ){
+            return Authentication._instance;
+        }
+        Authentication._instance = this;
         Amplify.configure(awsconfig);
+        this.users = null; 
     }
 
     async signUp(username,password,email,phone_number) {
         try {
-            const { user } = await Auth.signup({
+            this.users = await Auth.signup({
                 username,
                 password,
                 attributes:{
@@ -22,25 +27,35 @@ class Authentication {
                 },
             });
             console.log("no error for :",user);
+            return true;
         }catch(error){
             console.log("error occur during sign up",error);
+            return false;
         }
     }
 
-    async signIn() {
+    async signIn(username,password) {
         try {
-            const user = await Auth.signIn(username, password);
+            this.users = await Auth.signIn(username, password);
+            return true;
         } catch (error) {
             console.log('error signing in', error);
+            return false;
         }
     }
 
     async signOut() {
         try {
             await Auth.signOut();
+            return true;
         } catch (error) {
             console.log('error signing out: ', error);
+            return false;
         }
+    }
+
+    get_users(){
+        return this.users;
     }
         
 
