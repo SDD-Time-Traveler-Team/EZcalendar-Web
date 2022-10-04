@@ -11,7 +11,7 @@ class Authentication {
         }
         Authentication._instance = this;
         Amplify.configure(awsconfig);
-        this.users = null; 
+        this.users; 
     }
 
     async signUp(username,password,email,phone_number) {
