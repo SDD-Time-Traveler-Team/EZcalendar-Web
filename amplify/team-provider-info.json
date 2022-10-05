@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ezcalendar-dev-115951-authRole",
+      "UnauthRoleArn": "arn:aws:iam::335882351510:role/amplify-ezcalendar-dev-115951-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::335882351510:role/amplify-ezcalendar-dev-115951-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-ezcalendar-dev-115951-deployment",
+      "UnauthRoleName": "amplify-ezcalendar-dev-115951-unauthRole",
+      "StackName": "amplify-ezcalendar-dev-115951",
+      "StackId": "arn:aws:cloudformation:us-east-1:335882351510:stack/amplify-ezcalendar-dev-115951/bfdcb7c0-44c6-11ed-b796-0ad3e0c28d59",
+      "AmplifyAppId": "d2w6fqcpdfa7kf"
+    }
+  }
+}
