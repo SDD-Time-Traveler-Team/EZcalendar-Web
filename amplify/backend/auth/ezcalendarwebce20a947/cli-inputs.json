@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "ezcalendar39a1bd57_identitypool_39a1bd57",
+    "identityPoolName": "ezcalendarwebce20a947_identitypool_ce20a947",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "ezcale39a1bd57",
-    "userPoolName": "ezcalendar39a1bd57_userpool_39a1bd57",
+    "resourceNameTruncated": "ezcalece20a947",
+    "userPoolName": "ezcalendarwebce20a947_userpool_ce20a947",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,16 +31,15 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "ezcale39a1bd57_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "ezcalece20a947_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "39a1bd57",
-    "resourceName": "ezcalendar39a1bd57",
+    "sharedId": "ce20a947",
+    "resourceName": "ezcalendarwebce20a947",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "triggers": {},
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

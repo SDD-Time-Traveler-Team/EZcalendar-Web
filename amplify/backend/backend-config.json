@@ -1,6 +1,6 @@
 {
   "auth": {
-    "ezcalendar39a1bd57": {
+    "ezcalendarwebce20a947": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
