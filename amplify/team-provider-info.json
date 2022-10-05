@@ -10,6 +10,11 @@
       "StackName": "amplify-ezcalendar-dev-115951",
       "StackId": "arn:aws:cloudformation:us-east-1:335882351510:stack/amplify-ezcalendar-dev-115951/bfdcb7c0-44c6-11ed-b796-0ad3e0c28d59",
       "AmplifyAppId": "d2w6fqcpdfa7kf"
+    },
+    "categories": {
+      "auth": {
+        "ezcalendar39a1bd57": {}
+      }
     }
   }
 }
