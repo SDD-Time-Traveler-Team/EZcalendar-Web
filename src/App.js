@@ -6,7 +6,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignupPage from './components/SignupPage';
 
 class App extends React.Component {
-    render() {
+
+    render(){
         const ROUTES = {
             LOGIN: "/login",
             CALENDAR: "/calendar",
