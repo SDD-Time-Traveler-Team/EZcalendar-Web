@@ -3,14 +3,14 @@ import CalendarViewUI from "./CalendarViewUI";
 
 class CalendarUI extends React.Component {
 
-        render() {
-            return(
+    render() {
+        return (
             <>
                 <CalendarViewUI/>
             </>
 
-            )
-        }
+        )
+    }
 }
 
 export default CalendarUI;

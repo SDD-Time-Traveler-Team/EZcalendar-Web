@@ -1,5 +1,5 @@
 import { Amplify, Auth } from 'aws-amplify';
-// import awsconfig from '../aws-exports';
+import awsconfig from '../aws-exports';
 
 class Authentication {
 
@@ -12,28 +12,47 @@ class Authentication {
         }
         Authentication._instance = this;
 
-        // Amplify.configure(awsconfig);
+        Amplify.configure(awsconfig);
         this.user = null;
+        this.email = null;
     }
 
     async signUp(email, password) {
         try {
-            this.user = await (await Auth.signUp({
-                email,
+            const username = email;
+            await Auth.signUp({
+                username,
                 password,
                 attributes: {
                     //Optional, if wanna to add more see amplify doc
                     email
                 },
-            })).user;
+            }).then((user) => {
+                this.user = user
+            });
+            console.log("signing up succeeded");
         } catch (error) {
             console.log("error signing up", error);
         }
     }
 
+    async confirmSignUp(email, code) {
+        try {
+            await Auth.confirmSignUp(email, code).then(() => {
+                this.email = email;
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async signIn(email, password) {
         try {
-            this.user = await (await Auth.signIn(email, password)).user;
+            await Auth.signIn(email, password).then(user => {
+                this.user = user;
+                this.email = email;
+                console.log(this.user); // todo: remove me
+            });
         } catch (error) {
             console.log('error signing in', error);
         }
@@ -41,8 +60,10 @@ class Authentication {
 
     async signOut() {
         try {
-            await Auth.signOut();
-            this.user = null;
+            await Auth.signOut().then(() => {
+                this.user = null;
+                this.email = null;
+            });
         } catch (error) {
             console.log('error signing out: ', error);
         }
