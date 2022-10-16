@@ -4,6 +4,7 @@ import React from "react";
 import LoginPage from './components/LoginPage'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignupPage from './components/SignupPage';
+import TagView from './components/TagView'
 
 class App extends React.Component {
 
@@ -11,7 +12,8 @@ class App extends React.Component {
         const ROUTES = {
             LOGIN: "/login",
             CALENDAR: "/calendar",
-            SIGNUP: "/signup"
+            SIGNUP: "/signup",
+            TAGVIEW: "/testtagview"
         };
 
         return (
@@ -28,6 +30,10 @@ class App extends React.Component {
                     <Route
                         exact path={ROUTES.SIGNUP}
                         element={<SignupPage/>}
+                    />
+                    <Route
+                        exact path={ROUTES.TAGVIEW}
+                        element={<TagView/>}
                     />
                 </Routes>
             </BrowserRouter>
