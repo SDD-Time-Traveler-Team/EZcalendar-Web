@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Dropdown, Menu, PageHeader, Space} from 'antd';
 import {UserOutlined} from "@ant-design/icons";
+import logo from "../assets/EZlogo.jpg";
 
 export default function NavBar({signOut}) {
     const menu = <Menu
@@ -17,7 +18,7 @@ export default function NavBar({signOut}) {
         <>
             <PageHeader
                 className={"site-page-header"}
-                avatar={{src: "https://joeschmoe.io/api/v1/random"}}
+                avatar={{src: logo}}
                 title={"EZcalendar"}
                 extra={[
                     <Dropdown overlay={menu}>
