@@ -8,7 +8,7 @@ export default function NavBar({signOut}) {
         items={[
             {
                 label: (
-                    <Button type="link" danger onClick={signOut()}>Sign Out</Button>
+                        <Button type="link" danger onClick={async() => await signOut()}>Sign Out</Button>
                 ),
                 key: 0
             }
