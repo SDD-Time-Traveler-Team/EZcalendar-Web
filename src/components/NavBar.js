@@ -1,21 +1,34 @@
-import Icon from '@ant-design/icons';
-import { Menu, Image } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
+import {Button, Dropdown, Menu, PageHeader, Space} from 'antd';
+import {UserOutlined} from "@ant-design/icons";
 
-const items = [
-    {
-        key: 'icon',
-        icon: <Icon
-            component={() => <Image src="../../public/logo192.png"/>}
-        />
-    },
-];
-
-export default function NavBar() {
+export default function NavBar({signOut}) {
+    const menu = <Menu
+        items={[
+            {
+                label: (
+                    <Button type="link" danger onClick={signOut()}>Sign Out</Button>
+                ),
+                key: "sign_out"
+            }
+        ]}
+    />
     return (
         <>
-            <Menu selectable={false} selectedKeys={["icon"]} mode="horizontal" items={items} />
+            <PageHeader
+                className={"site-page-header"}
+                avatar={{src: "https://joeschmoe.io/api/v1/random"}}
+                title={"EZcalendar"}
+                extra={[
+                    <Dropdown overlay={menu}>
+                        <Button onClick={(e) => e.preventDefault()}>
+                            <Space>
+                                <UserOutlined/>
+                            </Space>
+                        </Button>
+                    </Dropdown>
+                ]}
+            />
         </>
-    );
-};
-
+    )
+}
