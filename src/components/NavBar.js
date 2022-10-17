@@ -10,7 +10,7 @@ export default function NavBar({signOut}) {
                 label: (
                     <Button type="link" danger onClick={signOut()}>Sign Out</Button>
                 ),
-                key: "sign_out"
+                key: 0
             }
         ]}
     />
