@@ -52,6 +52,8 @@ class Authentication {
                 this.user = user;
                 this.email = email;
                 console.log(this.user); // todo: remove me
+            }).then((user)=>{
+                this.user = user;
             });
         } catch (error) {
             console.log('error signing in', error);
