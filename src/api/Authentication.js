@@ -11,6 +11,7 @@ class Authentication {
             return Authentication._instance;
         }
         Authentication._instance = this;
+        console.log(this);
 
         Amplify.configure(awsconfig);
         this.user = null;
@@ -51,9 +52,7 @@ class Authentication {
             await Auth.signIn(email, password).then(user => {
                 this.user = user;
                 this.email = email;
-                console.log(this.user); // todo: remove me
-            }).then((user)=>{
-                this.user = user;
+                console.log("?_??????",this.user); // todo: remove me
             });
         } catch (error) {
             console.log('error signing in', error);

@@ -2,34 +2,29 @@ import './App.css';
 import CalendarUI from './components/CalendarUI'
 import React from 'react';
 import LoginPage from './components/LoginPage'
-import { BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import SignupPage from './components/SignupPage';
 import Authentication from './api/Authentication';
 
 const App = () => {
-    const ROUTES = {
-        LOGIN: "/login",
-        SIGNUP: "/signup",
-        CALENDAR: "/calendar"
-    };
     //const [auth] = useState(new Authentication());
     return (
         <BrowserRouter>
             <Routes>
                 <Route
-                path="/" element={<LoginPage/>}
+                path="/" element={<Navigate to = '/login'/>}
                 />
                 <Route
-                    exact path={ROUTES.LOGIN}
+                    exact path={"/login"}
                     element={<LoginPage/>}
                 />
                 <Route
-                    exact path={ROUTES.SIGNUP}
+                    exact path={"/signup"}
                     element={<SignupPage/>}
                 />
                 <Route
-                    exact path={(new Authentication().user!=null)?ROUTES.CALENDAR:ROUTES.LOGIN}
-                    element={new Authentication().user==null?<LoginPage/>:<CalendarUI/>}
+                    exact path={"/calendar"}
+                    element={<CalendarUI/>}
                 />
             </Routes>
         </BrowserRouter>
