@@ -1,12 +1,31 @@
-import React from 'react'
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import React, {useEffect, useState} from 'react'
+import {useNavigate} from "react-router-dom";
+import CalendarViewUI from "./CalendarViewUI";
+import NavBar from './NavBar';
+import Authentication from "../api/Authentication";
 
-function fullCalendar() {
-        return (
-            <FullCalendar
-                plugins={[ dayGridPlugin ]}
-                initialView="dayGridMonth"
-            />
-        )
+const CalendarUI = () => {
+    const [auth] = useState(new Authentication());
+    const [loggedIn, setLoggedIn] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setLoggedIn(!!auth.user);
+
+        // if signed out, redirect to /login
+        if (!loggedIn) {
+            navigate("/login");
+            console.log("not logged in, redirect to /login");
+            console.log(auth.user);
+        }
+    }, [auth.user, loggedIn, navigate]);
+
+    return (
+        <>
+        <NavBar setLoginStatus={setLoggedIn}/>
+            <CalendarViewUI/>
+        </>
+    );
 }
+
+export default CalendarUI;

@@ -1,20 +1,33 @@
 import './App.css';
-import './component/fullcalendar'
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import React from "react";
+import CalendarUI from './components/CalendarUI'
+import React from 'react';
+import LoginPage from './components/LoginPage'
+import { BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import SignupPage from './components/SignupPage';
 
-function App() {
-  return (
-      <>
-          <body>
-            <FullCalendar
-                plugins={[ dayGridPlugin ]}
-                initialView="dayGridMonth"
-            />
-          </body>
-      </>
-  );
+const App = () => {
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route
+                path="/" element={<Navigate to = '/login'/>}
+                />
+                <Route
+                    exact path={"/login"}
+                    element={<LoginPage/>}
+                />
+                <Route
+                    exact path={"/signup"}
+                    element={<SignupPage/>}
+                />
+                <Route
+                    exact path={"/calendar"}
+                    element={<CalendarUI/>}
+                />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
