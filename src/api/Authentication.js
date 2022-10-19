@@ -64,6 +64,7 @@ class Authentication {
             await Auth.signOut().then(() => {
                 this.user = null;
                 this.email = null;
+                console.log("signed out");
             });
         } catch (error) {
             console.log('error signing out: ', error);
