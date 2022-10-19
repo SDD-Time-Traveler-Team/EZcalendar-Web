@@ -4,10 +4,9 @@ import React from 'react';
 import LoginPage from './components/LoginPage'
 import { BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import SignupPage from './components/SignupPage';
-import Authentication from './api/Authentication';
 
 const App = () => {
-    //const [auth] = useState(new Authentication());
+
     return (
         <BrowserRouter>
             <Routes>

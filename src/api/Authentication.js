@@ -52,7 +52,7 @@ class Authentication {
             await Auth.signIn(email, password).then(user => {
                 this.user = user;
                 this.email = email;
-                console.log("?_??????",this.user); // todo: remove me
+                console.log("user_information",this.user); // todo: remove me
             });
         } catch (error) {
             console.log('error signing in', error);

@@ -9,7 +9,7 @@ const LoginPage = () => {
 
     const onLogin = (values) => {
         auth.signIn(values.email, values.password).then(() => {
-            console.log('sign in success:', auth.user);
+            console.log('sign in success:', auth);
             
             // navigate to calendar
             navigate("/calendar");
