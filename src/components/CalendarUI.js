@@ -23,7 +23,7 @@ const CalendarUI = () => {
             <NavBar signOut={auth.signOut}/>
             <CalendarViewUI/>
         </>
-    )
+    );
 }
 
 export default CalendarUI;
