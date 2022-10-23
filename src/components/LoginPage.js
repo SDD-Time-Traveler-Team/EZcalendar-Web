@@ -1,18 +1,24 @@
-import { Button, Checkbox, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Form, Input, Row, Alert } from 'antd';
 import React, { useState } from 'react';
 import Authentication from "../api/Authentication";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const [auth, setAuth] = useState(new Authentication());
+    const [alertOpen, setAlertOpen] = useState(false);
     const navigate = useNavigate();
 
     const onLogin = (values) => {
-        auth.signIn(values.email, values.password).then(() => {
-            console.log('sign in success:', auth);
-            
-            // navigate to calendar
-            navigate("/calendar");
+        auth.signIn(values.email, values.password).then((resolve, reject) => {
+            if (resolve) {
+                console.log('sign in success:', auth);
+                navigate("/calendar");
+            }
+
+            else {
+                console.log('sign in fail:', auth);
+                setAlertOpen(true);
+            }
         });
     };
 
@@ -20,8 +26,24 @@ const LoginPage = () => {
         console.log('Failed:', errorInfo);
     };
 
+    const onClose = (e) => {
+        console.log(e, 'I was closed.');
+        setAlertOpen(false);
+    };
+
     return (
-        <Row type="flex" justify="center" align="middle" style={{minHeight: '75vh'}}>
+        <Row type="flex" justify="center" align="middle" style={{ minHeight: '75vh' }}>
+            {alertOpen ?  
+                (<Alert
+                    message= "Error"
+                    description= "Unmatched email and password!"
+                    type="error"
+                    closable
+                    onClose={onClose}
+                />)
+                :
+                <></>
+            }
             <Form
                 name="basic"
                 labelCol={{
@@ -41,33 +63,33 @@ const LoginPage = () => {
                 autoComplete="off"
             >
                 <Form.Item required={false}
-                           name="email"
-                           label="E-mail"
-                           rules={[
-                               {
-                                   type: 'email',
-                                   message: 'The input is not valid E-mail!',
-                               },
-                               {
-                                   required: true,
-                                   message: 'Please input your E-mail!',
-                               },
-                           ]}
+                    name="email"
+                    label="E-mail"
+                    rules={[
+                        {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                        },
+                        {
+                            required: true,
+                            message: 'Please input your E-mail!',
+                        },
+                    ]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item required={false}
-                           label="Password"
-                           name="password"
-                           rules={[
-                               {
-                                   required: true,
-                                   message: 'Please input your password!',
-                               },
-                           ]}
+                    label="Password"
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your password!',
+                        },
+                    ]}
                 >
-                    <Input.Password/>
+                    <Input.Password />
                 </Form.Item>
 
                 <Form.Item
@@ -92,6 +114,7 @@ const LoginPage = () => {
                     </Button> Or <a href="/signup">register now!</a>
                 </Form.Item>
             </Form>
+            
         </Row>
     );
 };
