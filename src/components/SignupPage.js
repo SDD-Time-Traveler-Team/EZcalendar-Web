@@ -104,6 +104,10 @@ const SignupPage = () => {
                             required: true,
                             message: 'Please input your password!',
                         },
+                        {
+                            min: 8,
+                            message: 'Please input your password with minimum length of 8!',
+                        },
                     ]}
                     hasFeedback
                 >
