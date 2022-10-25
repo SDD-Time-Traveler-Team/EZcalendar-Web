@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import {Card} from 'antd';
+import { PlusOutlined, DeleteOutlined} from '@ant-design/icons';
+import {Card, Button} from 'antd';
 import Meta from "antd/es/card/Meta";
-const Tag = (props) => {
+
+const Tag = ({title, duration, id, onDelete}) => {
     return (
         <>
             <Card style={{marginLeft:"2.5%", width:'95%', marginTop: 5}}
-                  title={props.title}
-                  extra={props.duration}
                   hoverable={true}
                   actions={[
-                      <EditOutlined key="edit"/>,
-                      <DeleteOutlined key="delete"/>
+                      <Button type="text" icon={<PlusOutlined/>}/>,
+                      <Button type="text" danger icon={<DeleteOutlined/>} onClick={() => onDelete(id)}/>
                   ]}>
-                <Meta
-                    description={props.description}
-                />
+                <Meta title={title}
+                      description={duration}/>
             </Card>
         </>
     );
