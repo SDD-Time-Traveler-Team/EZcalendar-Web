@@ -9,10 +9,10 @@ class CalendarUI extends React.Component {
             return(
             <>
                 <Row>
-                    <Col span = {6}>
+                    <Col span = {5}>
                         <TagView/>
                     </Col>
-                    <Col span = {18}>
+                    <Col span = {19}>
                         <CalendarViewUI/>
                     </Col>
                 </Row>
