@@ -25,11 +25,9 @@ const config = {
     ],
 };
 
-const TagCreate = () => {
+const TagCreate = ({CreateTag}) => {
 
     const [value, setValue] = useState(1);
-    var inputtitle = "";
-    var inputduration = ""
 
     const onChange = (e) => {
         console.log('radio checked', e.target.value);
@@ -42,42 +40,39 @@ const TagCreate = () => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-
-    };
-
     const handleCancel = () => {
+        form.resetFields()
         setIsModalOpen(false);
     };
 
     const onFinish = (fieldsValue) => {
-        const rangeValue = fieldsValue['range-picker'];
-        const rangeTimeValue = fieldsValue['range-time-picker'];
+        //const rangeValue = fieldsValue['range-picker'];
+        //const rangeTimeValue = fieldsValue['range-time-picker'];
         const values = {
             ...fieldsValue,
-            'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-            'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
-            'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
-            'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
-            'range-time-picker': [
-            rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-            rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-            ],
+            // 'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+            // 'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
+            // 'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
+            // 'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
+            // 'range-time-picker': [
+            // rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+            // rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+            // ],
             'time-picker': fieldsValue['time-picker'].format('HH:mm'),
         };
-        console.log('Received values of form: ', values);
+        setIsModalOpen(false);
+        CreateTag(value.title, value["time-picker"])
+        //console.log('Received values of form: ', values);
     };
     const [form] = Form.useForm();
     return (
         <>
-            <Button type="primary" onClick={showModal}>
+            <Button type="primary" size="large" onClick={showModal}>
                 Create Tag
             </Button>
             <Modal title="Create a tag" open={isModalOpen} onOk={() => {
-                form
-                .validateFields().then(handleOk)}} onCancel={handleCancel}>
-                <Form form={form} name="time_related_controls" onFinish={onFinish}>
+                form.validateFields().then(form.submit)}} onCancel={handleCancel}>
+                <Form id="tagCreateForm" form={form} name="time_related_controls" onFinish={onFinish}>
                     {/*<Form.Item>*/}
                     {/*    <Radio.Group onChange={onChange} value={value}>*/}
                     {/*        <Radio value={1}>*/}
