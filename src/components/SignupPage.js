@@ -4,13 +4,14 @@ import {
     Input,
     Modal,
     Row,
+    InputNumber,
+    Alert,
 } from 'antd';
 import React, { useState } from "react";
 import Authentication from "../api/Authentication";
 import { useNavigate } from "react-router-dom";
 
-const {TextArea} = Input;
-
+const { TextArea } = Input;
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -46,8 +47,14 @@ const SignupPage = () => {
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [auth, setAuth] = useState(new Authentication());
     const [code, setCode] = useState("");
+    const [alertOpen, setAlertOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const navigate = useNavigate();
+
+    const hideModal = () => {
+        setConfirmModalOpen(false);
+    };
+
 
     const onSignUp = (values) => {
         console.log('Received values of form: ', values.email);
@@ -58,18 +65,53 @@ const SignupPage = () => {
     };
 
     const onConfirmSignUp = () => {
-        auth.confirmSignUp(userEmail, code).then(() => {
-            console.log("signup confirmed");
-            navigate("/login");
+        auth.confirmSignUp(userEmail, code).then((resolve, reject) => {
+            if (resolve) {
+                console.log("Confirm Successfully!");
+                navigate("/login");
+            }
+            else {
+                console.log('Confirm Fail.');
+                setAlertOpen(true);
+            }
         });
     };
 
-    return (
-        <Row type="flex" justify="center" align="middle" style={{minHeight: '75vh'}}>
-            <Modal title={"Confirm SignUp"} open={confirmModalOpen} onOk={onConfirmSignUp}>
-                <TextArea onChange={(e) => setCode(e.target.value)}/>
-            </Modal>
 
+    const onClose = (e) => {
+        console.log(e, 'I was closed.');
+        setAlertOpen(false);
+    };
+
+    return (
+        <Row type="flex" justify="center" align="middle" style={{ minHeight: '75vh' }}>
+            <Modal
+                title={"Email Confirmation Code"}
+                open={confirmModalOpen}
+                onOk={onConfirmSignUp}
+                onCancel={hideModal}
+                okText = "Confirm"
+                cancelText = "Cancel">
+                <Alert
+                    message="Please check your email for confirmation code!"
+                    type="success"
+                    closable
+                    onClose={onClose}
+                />
+                <Input align='middle' type='number' onChange={(e) => setCode(e.target.value)} size='large'
+                    max={6} min={1} />
+                {alertOpen ?
+                    (<Alert
+                        message="Error"
+                        description="Incorrect Email Confirmation Code!"
+                        type="error"
+                        closable
+                        onClose={onClose}
+                    />)
+                    :
+                    <></>
+                }
+            </Modal>
             <Form
                 {...formItemLayout}
                 name="register"
@@ -93,7 +135,7 @@ const SignupPage = () => {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -104,10 +146,14 @@ const SignupPage = () => {
                             required: true,
                             message: 'Please input your password!',
                         },
+                        {
+                            min: 8,
+                            message: 'Please input your password with minimum length of 8!',
+                        },
                     ]}
                     hasFeedback
                 >
-                    <Input.Password/>
+                    <Input.Password />
                 </Form.Item>
 
                 <Form.Item
@@ -120,7 +166,7 @@ const SignupPage = () => {
                             required: true,
                             message: 'Please confirm your password!',
                         },
-                        ({getFieldValue}) => ({
+                        ({ getFieldValue }) => ({
                             validator(_, value) {
                                 if (!value || getFieldValue('password') === value) {
                                     return Promise.resolve();
@@ -131,7 +177,7 @@ const SignupPage = () => {
                         }),
                     ]}
                 >
-                    <Input.Password/>
+                    <Input.Password />
                 </Form.Item>
 
                 <Form.Item {...tailFormItemLayout}>
