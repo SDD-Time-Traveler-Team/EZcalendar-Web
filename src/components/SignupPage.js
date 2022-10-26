@@ -12,7 +12,6 @@ import Authentication from "../api/Authentication";
 import { useNavigate } from "react-router-dom";
 
 const { TextArea } = Input;
-
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -52,6 +51,11 @@ const SignupPage = () => {
     const [userEmail, setUserEmail] = useState("");
     const navigate = useNavigate();
 
+    const hideModal = () => {
+        setConfirmModalOpen(false);
+    };
+
+
     const onSignUp = (values) => {
         console.log('Received values of form: ', values.email);
         auth.signUp(values.email, values.password).then(() => {
@@ -73,6 +77,7 @@ const SignupPage = () => {
         });
     };
 
+
     const onClose = (e) => {
         console.log(e, 'I was closed.');
         setAlertOpen(false);
@@ -80,7 +85,13 @@ const SignupPage = () => {
 
     return (
         <Row type="flex" justify="center" align="middle" style={{ minHeight: '75vh' }}>
-            <Modal title={"Email Confirmation Code"} open={confirmModalOpen} onOk={onConfirmSignUp}>
+            <Modal
+                title={"Email Confirmation Code"}
+                open={confirmModalOpen}
+                onOk={onConfirmSignUp}
+                onCancel={hideModal}
+                okText = "Confirm"
+                cancelText = "Cancel">
                 <Alert
                     message="Please check your email for confirmation code!"
                     type="success"
