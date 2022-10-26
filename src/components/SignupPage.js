@@ -81,6 +81,12 @@ const SignupPage = () => {
     return (
         <Row type="flex" justify="center" align="middle" style={{ minHeight: '75vh' }}>
             <Modal title={"Email Confirmation Code"} open={confirmModalOpen} onOk={onConfirmSignUp}>
+                <Alert
+                    message="Please check your email for confirmation code!"
+                    type="success"
+                    closable
+                    onClose={onClose}
+                />
                 <Input align='middle' type='number' onChange={(e) => setCode(e.target.value)} size='large'
                     max={6} min={1} />
                 {alertOpen ?
