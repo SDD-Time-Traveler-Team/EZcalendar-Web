@@ -25,7 +25,6 @@ const TagView = () => {
         //     return newTags
         // });
     }
-
     const deleteTag = (id) => {
         console.log(id)
         setTags(prev => {
@@ -36,6 +35,16 @@ const TagView = () => {
     }
 
     const ContainerHeight = 1230;
+
+    const editTag = (id, title, duration) => {
+        console.log(id)
+        setTags(prev => {
+            let newTags = Object.assign({}, tags);
+            newTags[id].title = title;
+            newTags[id].duration = duration;
+            return newTags
+        });
+    }
 
     return (
         <Row>
@@ -63,7 +72,7 @@ const TagView = () => {
                             >
                                {(item) => (
                                     <List.Item>
-                                        <Tag key={item[0]} title={item[1].title} duration={item[1].duration} id={item[0]} onDelete={deleteTag}/>
+                                        <Tag key={item[0]} title={item[1].title} duration={item[1].duration} id={item[0]} onDelete={deleteTag} onEdit={editTag}/>
                                     </List.Item>
                                )}  
                             </VirtualList>
