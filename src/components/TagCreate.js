@@ -61,7 +61,7 @@ const TagCreate = ({CreateTag}) => {
             'time-picker': fieldsValue['time-picker'].format('HH:mm'),
         };
         setIsModalOpen(false);
-        CreateTag(value.title, value["time-picker"])
+        CreateTag(values.title, values["time-picker"])
         //console.log('Received values of form: ', values);
     };
     const [form] = Form.useForm();

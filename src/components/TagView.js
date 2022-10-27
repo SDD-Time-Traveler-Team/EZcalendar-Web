@@ -18,13 +18,30 @@ const TagView = () => {
         "9": {title:"Event9", duration: "5:23"},
     });
 
-    const CreateTag = (title, duration) => {
-        // setTags(prev => {
-        //     let newTags = Object.assign({}, tags);
-        //     delete newTags[id];
-        //     return newTags
-        // });
+    const CreateTag = (tagTitle, tagDuration) => {
+        setTags(prev => {
+            let newTags = Object.assign({}, tags);
+
+            //placeholder tag id; tag id has to be fetched from the database
+            const objkeys = Object.entries(newTags)
+            let tagID = "0"
+            if(objkeys.length>0)
+            {
+                let tmp = objkeys[0][0]
+                for (let i = 1; i < objkeys.length; i++) {
+                    if(objkeys[i][0] > tmp){
+                        tmp = objkeys[i][0]
+                    }
+                }
+                tagID = (parseInt(tmp)+1).toString();
+            }
+
+            
+            newTags[`${tagID}`] = {title: tagTitle, duration: tagDuration};
+            return newTags
+        });
     }
+
     const deleteTag = (id) => {
         console.log(id)
         setTags(prev => {
@@ -37,7 +54,7 @@ const TagView = () => {
     const ContainerHeight = 1230;
 
     const editTag = (id, title, duration) => {
-        console.log(id)
+        //console.log(id)
         setTags(prev => {
             let newTags = Object.assign({}, tags);
             newTags[id].title = title;
