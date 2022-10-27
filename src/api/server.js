@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
 const { Client } = require('pg');
+// require('dotenv').config()
 
 const tagsRouter = require('./routes/tags')
 const eventsRouter = require('./routes/events')

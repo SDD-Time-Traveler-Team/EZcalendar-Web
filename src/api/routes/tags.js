@@ -18,6 +18,7 @@ router.put("/", (req, res, next) => {
     createTag(req.body.userId, req.body.tag).then((resolve, reject) => {
         if (resolve) {
             res.sendStatus(200)
+            res.end(JSON.stringify({id:resolve.rows[0].id}))
         } else {
             res.sendStatus(400)
         }
@@ -45,3 +46,4 @@ router.delete("/", (req, res, next) => {
         }
     })
 })
+module.exports=router;

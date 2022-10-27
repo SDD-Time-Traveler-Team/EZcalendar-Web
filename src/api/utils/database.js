@@ -1,14 +1,14 @@
-
 const { Client } = require('pg')
-require('dotenv').config()
 
-const client = new Client({
-    user: provess.env.DBUSER,
-    host: process.env.DBHOST,
-    database: provess.env.DBDATABASE,
-    password: provess.env.DBPASSWORD,
-    port: process.env.DBPORT,
-})
+// const client = new Client({
+//     user: process.env.DBUSER,
+//     host: process.env.DBHOST,
+//     database: process.env.DBDATABASE,
+//     password: process.env.DBPASSWORD,
+//     port: process.env.DBPORT,
+// })
+
+client.connect().then(() => console.log("client connected"))
 
 const getTags = async (userId) => {
     client.query(
@@ -51,7 +51,6 @@ const deleteTag = async (userId, tagId) => {
     })
 }
 
-client.connect().then(() => console.log("client connected"))
 
 module.exports = {
     getTags,
