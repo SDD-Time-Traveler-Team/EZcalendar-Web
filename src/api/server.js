@@ -3,8 +3,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
-const { Client } = require('pg');
-// require('dotenv').config()
+require('dotenv').config()
 
 const tagsRouter = require('./routes/tags')
 const eventsRouter = require('./routes/events')
@@ -27,15 +26,6 @@ app.get("/", (req, res, next) => {
 
 app.use('/tags', tagsRouter)
 app.use('/events', eventsRouter)
-app.use('tasks', tasksRouter)
+app.use('/tasks', tasksRouter)
 
-const client = new Client({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'testdb',
-    password: '1234abcd',
-    port: 5432,
-});
-
-client.connect();
 module.exports = app
