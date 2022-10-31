@@ -21,7 +21,6 @@ const TagView = () => {
     const CreateTag = (tagTitle, tagDuration) => {
         setTags(prev => {
             let newTags = Object.assign({}, tags);
-
             //placeholder tag id; tag id has to be fetched from the database
             const objkeys = Object.entries(newTags)
             let tagID = "0"
@@ -36,8 +35,8 @@ const TagView = () => {
                 tagID = (parseInt(tmp)+1).toString();
             }
 
-            
-            newTags[`${tagID}`] = {title: tagTitle, duration: tagDuration};
+            newTags = Object.assign({[`${tagID}`]: {title: tagTitle, duration: tagDuration}}, newTags)
+            console.log(newTags)
             return newTags
         });
     }

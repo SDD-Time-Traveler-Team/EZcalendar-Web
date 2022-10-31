@@ -73,17 +73,6 @@ const TagCreate = ({CreateTag}) => {
             <Modal title="Create a tag" open={isModalOpen} onOk={() => {
                 form.validateFields().then(form.submit)}} onCancel={handleCancel}>
                 <Form id="tagCreateForm" form={form} name="time_related_controls" onFinish={onFinish}>
-                    {/*<Form.Item>*/}
-                    {/*    <Radio.Group onChange={onChange} value={value}>*/}
-                    {/*        <Radio value={1}>*/}
-                    {/*            Event*/}
-                    {/*        </Radio>*/}
-                    {/*        <Radio value={2}>*/}
-                    {/*            To-do*/}
-                    {/*        </Radio>*/}
-                    {/*    </Radio.Group>*/}
-                    {/*</Form.Item>*/}
-
                     <Form.Item 
                         label="Title"
                         name="title"
@@ -108,21 +97,6 @@ const TagCreate = ({CreateTag}) => {
                     <Form.Item name="time-picker" label="Duration" {...config}>
                         <TimePicker format="HH:mm"/>
                     </Form.Item>
-                    {/*<Form.Item*/}
-                    {/*    label="Description"*/}
-                    {/*    wrapperCol={{*/}
-                    {/*        xs: {*/}
-                    {/*            span: 0,*/}
-                    {/*            offset: 0,*/}
-                    {/*        },*/}
-                    {/*        sm: {*/}
-                    {/*            span: 15,*/}
-                    {/*            offset: 0,*/}
-                    {/*        },*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    <Input.TextArea/>*/}
-                    {/*</Form.Item>*/}
                 </Form>
             </Modal>
         </>
