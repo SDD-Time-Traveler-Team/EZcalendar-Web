@@ -5,7 +5,7 @@ const {getAllTags, createTag, updateTag, deleteTag} = require("../utils/database
 // GET /tags read all tags
 router.get("/", (req, res) => {
     getAllTags(req.body.email).then((result) => {
-        res.send(result.rows[0]);
+        res.send(result.rows);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(400);
