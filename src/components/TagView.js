@@ -26,17 +26,15 @@ const TagView = () => {
             let tagID = "0"
             if(objkeys.length>0)
             {
-                let tmp = objkeys[0][0]
+                let tmp = parseInt(objkeys[0][0])
                 for (let i = 1; i < objkeys.length; i++) {
-                    if(objkeys[i][0] > tmp){
+                    if(parseInt(objkeys[i][0]) > tmp){
                         tmp = objkeys[i][0]
                     }
                 }
                 tagID = (parseInt(tmp)+1).toString();
             }
-
             newTags = Object.assign({[`${tagID}`]: {title: tagTitle, duration: tagDuration}}, newTags)
-            console.log(newTags)
             return newTags
         });
     }
@@ -50,7 +48,7 @@ const TagView = () => {
         });
     }
 
-    const ContainerHeight = 1230;
+    const ContainerHeight = 750;
 
     const editTag = (id, title, duration) => {
         //console.log(id)

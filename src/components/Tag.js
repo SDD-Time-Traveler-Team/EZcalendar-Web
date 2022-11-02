@@ -51,7 +51,7 @@ const Tag = ({ title, duration, id, onDelete, onEdit }) => {
                     <Button type="text" icon={<PlusOutlined />} />,
                     <Button type="text" danger icon={<DeleteOutlined />} onClick={() => onDelete(id)} />,
                     <>
-                        <Button type="text" danger icon={<EditOutlined />} onClick={() => showModal()} />,
+                        <Button type="text" icon={<EditOutlined />} onClick={() => showModal()} />,
                         <Modal title="Edit the Tag" open={isModalOpen} onOk={() => {
                             form.validateFields().then(form.submit)
                         }} onCancel={handleCancel}>
