@@ -8,7 +8,13 @@ export default function NavBar({setLoginStatus}) {
     const [auth] = useState(new Authentication());
 
     const onClickSignOut = async () => {
-        await auth.signOut();
+        auth.signOut().then(() => {
+            auth.user = null;
+            auth.email = null;
+            console.log(`sign out succeed`);
+        }).catch((err) => {
+            console.log(`sign out fail ${err}`);
+        });
         setLoginStatus(false);
     }
 
