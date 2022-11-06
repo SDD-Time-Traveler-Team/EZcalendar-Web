@@ -188,6 +188,7 @@ const SignupPage = () => {
             </Form>
         </Row>
     );
+
 };
 
 export default SignupPage;
