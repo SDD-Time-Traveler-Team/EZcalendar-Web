@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 import CalendarViewUI from "./CalendarViewUI";
 import NavBar from './NavBar';
 import Authentication from "../api/Authentication";
-import Database from "../api/Database"
 import TagView from "./TagView";
 import { Row, Col } from 'antd';
 
@@ -12,7 +11,6 @@ const CalendarUI = () => {
     const [auth] = useState(new Authentication());
     const [loggedIn, setLoggedIn] = useState(true);
     const navigate = useNavigate();
-    const db = new Database();
 
     useEffect(() => {
         setLoggedIn(!!auth.user);
