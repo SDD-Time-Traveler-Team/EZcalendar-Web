@@ -1,8 +1,11 @@
+
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from "react-router-dom";
 import CalendarViewUI from "./CalendarViewUI";
 import NavBar from './NavBar';
 import Authentication from "../api/Authentication";
+import TagView from "./TagView";
+import { Row, Col } from 'antd';
 
 const CalendarUI = () => {
     const [auth] = useState(new Authentication());
@@ -22,8 +25,17 @@ const CalendarUI = () => {
 
     return (
         <>
-        <NavBar setLoginStatus={setLoggedIn}/>
-            <CalendarViewUI/>
+            <NavBar setLoginStatus={setLoggedIn}/>
+             <>
+                <Row>
+                    <Col span = {5}>
+                        <TagView />
+                    </Col>
+                    <Col span = {19}>
+                        <CalendarViewUI />
+                    </Col>
+                </Row>
+            </>
         </>
     );
 }
