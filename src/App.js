@@ -4,7 +4,6 @@ import React from 'react';
 import LoginPage from './components/LoginPage'
 import { BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import SignupPage from './components/SignupPage';
-import TagView from './components/TagView'
 
 const App = () => {
 

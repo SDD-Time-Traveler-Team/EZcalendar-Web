@@ -5,8 +5,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 //import listPlugin from '@fullcalendar/list';
  
-const CalendarViewUI = ({tags}) => {
-
+const CalendarViewUI = ({eventTasks, setEventtasks}) => {
+    var eventbuffer = [...eventTasks];
     return(
         <FullCalendar
             plugins={[ dayGridPlugin, timeGridPlugin,interactionPlugin]}
@@ -14,6 +14,9 @@ const CalendarViewUI = ({tags}) => {
             headerToolbar = {{
                 center: 'dayGridMonth,timeGridWeek,timeGridDay',
             }}
+            editable
+            events = {eventTasks}
+            eventChange = {(changeInfo) => {console.log(changeInfo['event'])}}
         />
     )
 }

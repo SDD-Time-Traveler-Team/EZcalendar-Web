@@ -4,7 +4,7 @@ import TagCreate from './TagCreate';
 import Tag from './Tag';
 import VirtualList from 'rc-virtual-list';
 
-const TagView = () => {
+const TagView = ({eventTasks, setEventtasks}) => {
 
     const [tags, setTags] = useState({
         "1": {title:"Event1", duration: "3:30"},
@@ -37,6 +37,16 @@ const TagView = () => {
             newTags = Object.assign({[`${tagID}`]: {title: tagTitle, duration: tagDuration}}, newTags)
             return newTags
         });
+    }
+
+    const putTaginCalendar = (eventTasksTitle, eventTasksStart, eventTasksEnd) =>{
+        setEventtasks(current => [...current, 
+            {
+                title  : eventTasksTitle,
+                start  : eventTasksStart,
+                end    : eventTasksEnd
+            }
+        ]);
     }
 
     const deleteTag = (id) => {
@@ -86,7 +96,9 @@ const TagView = () => {
                             >
                                {(item) => (
                                     <List.Item>
-                                        <Tag key={item[0]} title={item[1].title} duration={item[1].duration} id={item[0]} onDelete={deleteTag} onEdit={editTag}/>
+                                        <Tag key={item[0]} title={item[1].title} duration={item[1].duration} 
+                                            id={item[0]} onDelete={deleteTag} onEdit={editTag} putTaginCalendar={putTaginCalendar}
+                                        />
                                     </List.Item>
                                )}  
                             </VirtualList>

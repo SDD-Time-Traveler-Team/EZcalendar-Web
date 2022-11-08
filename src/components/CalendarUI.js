@@ -11,6 +11,7 @@ import { Row, Col } from 'antd';
 const CalendarUI = () => {
     const [auth] = useState(new Authentication());
     const [loggedIn, setLoggedIn] = useState(true);
+    const [eventTasks, setEventtasks] = useState([]);
     const navigate = useNavigate();
 //    const db = new Database();
 
@@ -31,10 +32,10 @@ const CalendarUI = () => {
              <>
                 <Row>
                     <Col span = {5}>
-                        <TagView />
+                        <TagView eventTasks={eventTasks} setEventtasks={setEventtasks}/>
                     </Col>
                     <Col span = {19}>
-                        <CalendarViewUI />
+                        <CalendarViewUI eventTasks={eventTasks} setEventtasks={setEventtasks}/>
                     </Col>
                 </Row>
             </>
