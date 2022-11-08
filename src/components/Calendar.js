@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 //import listPlugin from '@fullcalendar/list';
  
-const CalendarViewUI = ({eventTasks, setEventtasks}) => {
+const Calendar = ({eventTasks, setEventtasks}) => {
     var eventbuffer = [...eventTasks];
     return(
         <FullCalendar
@@ -21,4 +21,4 @@ const CalendarViewUI = ({eventTasks, setEventtasks}) => {
     )
 }
 
-export default CalendarViewUI;
+export default Calendar;
