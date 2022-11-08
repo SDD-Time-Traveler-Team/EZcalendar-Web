@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from "react-router-dom";
+import {Row, Col} from 'antd';
 import Calendar from "./Calendar";
 import NavBar from './NavBar';
-import Authentication from "../api/Authentication";
-//import Database from "../api/Database"
 import TagView from "./TagView";
-import {Row, Col} from 'antd';
+import Authentication from "../utils/Authentication";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
     const [loggedIn, setLoggedIn] = useState(true);
     const [eventTasks, setEventtasks] = useState([]);
     const navigate = useNavigate();
-//    const db = new Database();
 
     useEffect(() => {
         setLoggedIn(!!auth.user);

@@ -1,7 +1,7 @@
-import {Button, Checkbox, Form, Input, Row, Alert} from 'antd';
 import React, {useEffect, useState} from 'react';
-import Authentication from "../api/Authentication";
 import {useNavigate} from "react-router-dom";
+import {Button, Checkbox, Form, Input, Row, Alert} from 'antd';
+import Authentication from "../utils/Authentication";
 
 const LoginPage = () => {
     const [auth] = useState(new Authentication());

@@ -1,15 +1,8 @@
-import {
-    Button,
-    Form,
-    Input,
-    Modal,
-    Row,
-    InputNumber,
-    Alert,
-} from 'antd';
 import React, {useState} from "react";
-import Authentication from "../api/Authentication";
 import {useNavigate} from "react-router-dom";
+import {Button, Form, Input, Modal, Row, InputNumber, Alert} from 'antd';
+import Authentication from "../utils/Authentication";
+
 
 const {TextArea} = Input;
 const formItemLayout = {
