@@ -21,7 +21,7 @@ async function getAllTags(email) {
 }
 
 async function createTag(email, tagTitle, durationInMinutes) {
-    const text = 'INSERT INTO tags (id, email, title, duration_in_minutes) VALUES (default, $1, $2, $3);';
+    const text = 'INSERT INTO tags (id, email, title, duration_in_minutes) VALUES (default, $1, $2, $3) RETURNING id;';
     const values = [email, tagTitle, durationInMinutes]
     return client.query(text, values);
 }

@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 router.put("/", (req, res) => {
     const {email, tagTitle, durationInMinutes} = req.body;
     createTag(email, tagTitle, durationInMinutes).then((result) => {
-        res.send(result.rows);
+        res.send(result.rows[0]);
     }).catch((err) => {
         console.log(err);
         res.sendStatus(400);
