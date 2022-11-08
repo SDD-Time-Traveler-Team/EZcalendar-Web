@@ -45,7 +45,7 @@ const tailFormItemLayout = {
 
 const SignupPage = () => {
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [auth, setAuth] = useState(new Authentication());
+    const [auth] = useState(new Authentication());
     const [code, setCode] = useState("");
     const [alertOpen, setAlertOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");

@@ -1,10 +1,10 @@
 import {Button, Checkbox, Form, Input, Row, Alert} from 'antd';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Authentication from "../api/Authentication";
 import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
-    const [auth, setAuth] = useState(new Authentication());
+    const [auth] = useState(new Authentication());
     const [alertOpen, setAlertOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const LoginPage = () => {
             auth.email = values.email;
             setAlertOpen(false);
             console.log('sign in success:', auth);
-            navigate("/calendar");
+            navigate("/dashboard");
 
         }).catch((err) => {
             console.log('sign in fail:', err);
