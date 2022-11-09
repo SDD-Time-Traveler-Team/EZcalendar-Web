@@ -195,6 +195,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                         title: event.title,
                         start: event.start,
                         end: event.end,
+                        textColor: "#2F4F4F",
                         extendedProps: {
                             tagId: event.tagId,
                         },
@@ -204,11 +205,11 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                         // task
                         newEvent.id = `task${event.id}`;
                         newEvent.extendedProps.completed = event.completed;
-                        newEvent.backgroundColor = "blue";
+                        newEvent.backgroundColor = "#1E90FF";
                     } else {
                         // event
                         newEvent.id = `event${event.id}`;
-                        newEvent.backgroundColor = "yellow";
+                        newEvent.backgroundColor = "#FFE4B5";
                     }
 
                     return newEvent;
