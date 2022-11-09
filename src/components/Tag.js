@@ -95,7 +95,7 @@ const Tag = ({ title, duration, id, onDelete, onEdit, putTaginCalendar }) => {
                 hoverable={true}
                 actions={[
                     <>
-                        <Button type="text" icon={<PlusOutlined />} onClick={() => showModalPut()}/>,
+                        <Button type="text" icon={<PlusOutlined />} onClick={() => showModalPut()}/>
                         <Modal title="Put the tag in calendar" open={isModalOpenPut} onOk={() => {
                             form1.validateFields().then(form1.submit)
                         }} onCancel={handleCancelPut}>
@@ -112,7 +112,7 @@ const Tag = ({ title, duration, id, onDelete, onEdit, putTaginCalendar }) => {
                     
                     <Button type="text" danger icon={<DeleteOutlined />} onClick={() => onDelete(id)} />,
                     <>
-                        <Button type="text" icon={<EditOutlined />} onClick={() => showModal()} />,
+                        <Button type="text" icon={<EditOutlined />} onClick={() => showModal()} />
                         <Modal title="Edit the Tag" open={isModalOpen} onOk={() => {
                             form.validateFields().then(form.submit)
                         }} onCancel={handleCancel}>
@@ -152,4 +152,5 @@ const Tag = ({ title, duration, id, onDelete, onEdit, putTaginCalendar }) => {
         </>
     );
 };
+
 export default Tag;
