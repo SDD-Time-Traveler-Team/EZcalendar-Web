@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Button, Checkbox, Form, Input, Row, Alert} from 'antd';
 import Authentication from "../utils/Authentication";
@@ -13,7 +13,7 @@ const LoginPage = () => {
             auth.user = user;
             auth.email = values.email;
             setAlertOpen(false);
-            console.log('sign in success:', auth);
+            console.log('sign in success');
             navigate("/dashboard");
 
         }).catch((err) => {
