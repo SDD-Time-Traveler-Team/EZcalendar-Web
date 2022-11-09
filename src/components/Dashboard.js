@@ -1,15 +1,15 @@
-
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from "react-router-dom";
-import CalendarViewUI from "./CalendarViewUI";
+import {Row, Col} from 'antd';
+import Calendar from "./Calendar";
 import NavBar from './NavBar';
-import Authentication from "../api/Authentication";
-import TagView from "./TagView";
-import { Row, Col } from 'antd';
+import TagMenu from "./TagMenu";
+import Authentication from "../utils/Authentication";
 
-const CalendarUI = () => {
+const Dashboard = () => {
     const [auth] = useState(new Authentication());
     const [loggedIn, setLoggedIn] = useState(true);
+    const [eventTasks, setEventtasks] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,13 +26,13 @@ const CalendarUI = () => {
     return (
         <>
             <NavBar setLoginStatus={setLoggedIn}/>
-             <>
+            <>
                 <Row>
-                    <Col span = {5}>
-                        <TagView />
+                    <Col span={5}>
+                        <TagMenu eventTasks={eventTasks} setEventtasks={setEventtasks}/>
                     </Col>
-                    <Col span = {19}>
-                        <CalendarViewUI />
+                    <Col span={19}>
+                        <Calendar eventTasks={eventTasks} setEventtasks={setEventtasks}/>
                     </Col>
                 </Row>
             </>
@@ -40,4 +40,4 @@ const CalendarUI = () => {
     );
 }
 
-export default CalendarUI;
+export default Dashboard;

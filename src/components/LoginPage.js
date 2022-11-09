@@ -1,24 +1,24 @@
-import { Button, Checkbox, Form, Input, Row, Alert } from 'antd';
-import React, { useState } from 'react';
-import Authentication from "../api/Authentication";
-import { useNavigate } from "react-router-dom";
+import React, {useState} from 'react';
+import {useNavigate} from "react-router-dom";
+import {Button, Checkbox, Form, Input, Row, Alert} from 'antd';
+import Authentication from "../utils/Authentication";
 
 const LoginPage = () => {
-    const [auth, setAuth] = useState(new Authentication());
+    const [auth] = useState(new Authentication());
     const [alertOpen, setAlertOpen] = useState(false);
     const navigate = useNavigate();
 
     const onLogin = (values) => {
-        auth.signIn(values.email, values.password).then((resolve, reject) => {
-            if (resolve) {
-                console.log('sign in success:', auth);
-                navigate("/calendar");
-            }
+        auth.signIn(values.email, values.password).then((user) => {
+            auth.user = user;
+            auth.email = values.email;
+            setAlertOpen(false);
+            console.log('sign in success');
+            navigate("/dashboard");
 
-            else {
-                console.log('sign in fail:', auth);
-                setAlertOpen(true);
-            }
+        }).catch((err) => {
+            console.log('sign in fail:', err);
+            setAlertOpen(true);
         });
     };
 
@@ -32,11 +32,11 @@ const LoginPage = () => {
     };
 
     return (
-        <Row type="flex" justify="center" align="middle" style={{ minHeight: '75vh' }}>
-            {alertOpen ?  
+        <Row type="flex" justify="center" align="middle" style={{minHeight: '75vh'}}>
+            {alertOpen ?
                 (<Alert
-                    message= "Error"
-                    description= "Unmatched email and password!"
+                    message="Error"
+                    description="Unmatched email and password!"
                     type="error"
                     closable
                     onClose={onClose}
@@ -63,33 +63,33 @@ const LoginPage = () => {
                 autoComplete="off"
             >
                 <Form.Item required={false}
-                    name="email"
-                    label="E-mail"
-                    rules={[
-                        {
-                            type: 'email',
-                            message: 'The input is not valid E-mail!',
-                        },
-                        {
-                            required: true,
-                            message: 'Please input your E-mail!',
-                        },
-                    ]}
+                           name="email"
+                           label="E-mail"
+                           rules={[
+                               {
+                                   type: 'email',
+                                   message: 'The input is not valid E-mail!',
+                               },
+                               {
+                                   required: true,
+                                   message: 'Please input your E-mail!',
+                               },
+                           ]}
                 >
-                    <Input />
+                    <Input/>
                 </Form.Item>
 
                 <Form.Item required={false}
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!',
-                        },
-                    ]}
+                           label="Password"
+                           name="password"
+                           rules={[
+                               {
+                                   required: true,
+                                   message: 'Please input your password!',
+                               },
+                           ]}
                 >
-                    <Input.Password />
+                    <Input.Password/>
                 </Form.Item>
 
                 <Form.Item
@@ -114,7 +114,7 @@ const LoginPage = () => {
                     </Button> Or <a href="/signup">register now!</a>
                 </Form.Item>
             </Form>
-            
+
         </Row>
     );
 };

@@ -1,10 +1,9 @@
 import './App.css';
-import CalendarUI from './components/CalendarUI'
 import React from 'react';
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LoginPage from './components/LoginPage'
-import { BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import SignupPage from './components/SignupPage';
-import TagView from './components/TagView'
+import Dashboard from './components/Dashboard'
 
 const App = () => {
 
@@ -12,7 +11,7 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route
-                path="/" element={<Navigate to = '/login'/>}
+                    path="/" element={<Navigate to='/login'/>}
                 />
                 <Route
                     exact path={"/login"}
@@ -23,8 +22,8 @@ const App = () => {
                     element={<SignupPage/>}
                 />
                 <Route
-                    exact path={"/calendar"}
-                    element={<CalendarUI/>}
+                    exact path={"/dashboard"}
+                    element={<Dashboard/>}
                 />
             </Routes>
         </BrowserRouter>
