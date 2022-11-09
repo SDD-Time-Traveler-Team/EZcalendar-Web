@@ -63,8 +63,6 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
         ].join("-");
         var timeStr = date1.toString().split(" ")[4];
 
-        console.log(fieldsValue)
-
         onAddToCalendar(
             id,
             title,
@@ -112,9 +110,9 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
                                     <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                                 </Form.Item>
                                 <Form.Item>
-                                    <Radio.Group onChange={(e) => {setIsEvent(e.target.value);console.log(isEvent)}} value={isEvent}>
-                                        <Radio value={false}>Event</Radio>
-                                        <Radio value={true}>Task</Radio>
+                                    <Radio.Group onChange={(e) => {setIsEvent(e.target.value)}} value={isEvent}>
+                                        <Radio value={true}>Event</Radio>
+                                        <Radio value={false}>Task</Radio>
                                     </Radio.Group>
                                 </Form.Item>
                             </Form>

@@ -8,18 +8,18 @@ import { useEffect } from "react";
 //import listPlugin from '@fullcalendar/list';
 
 const Calendar = ({ events, setEvents, tasks, setTasks }) => {
-    console.log("calendar rendered");
+    //console.log("calendar rendered");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
-    const [clickedItem, setClickedItem] = useState({});
+    const [clickedItem, setClickedItem] = useState();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [modifyForm] = Form.useForm();
 
-    useEffect(() => {
-        console.log(clickedItem);
-    }, [clickedItem]);
+    // useEffect(() => {
+    //     console.log(clickedItem);
+    // }, [clickedItem]);
 
     const onEventChange = ({ event, oldEvent, revert }) => {
         console.log(event);
@@ -78,10 +78,29 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     const onEventClick = ({ event }) => {
         setIsModalOpen(true);
-        setClickedItem(event);
+        if (event.extendedProps.hasOwnProperty("completed")) {
+            setClickedItem({
+                id: event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                tagId: event.tagId,
+                completed: event.completed,
+            });
+        }
+        else{
+            setClickedItem({
+                id: event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                tagId: event.tagId,
+            });
+        }
         setIsClickedTask(false);
         setIsFormOpen(false);
         setIsClickedTask(event.extendedProps.hasOwnProperty("completed"));
+        //console.log(clickedItem)
     };
 
     const handleModalOk = () => {
@@ -90,10 +109,16 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
             .then(() => modifyForm.submit())
             .then(() => {
                 if (isClickedTask) {
-                    clickedItem.setExtendedProp("completed", completeBoxChecked);
+                    clickedItem.completed = completeBoxChecked;
+                    if(clickedItem.completed)
+                    {
+                        setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+                    }
                 }
                 setIsModalOpen(false);
-            });
+                setClickedItem({});
+                setIsClickedTask(false)
+            })
     };
 
     const handleModalCancel = () => {
@@ -101,16 +126,42 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     const onDeleteEvent = () => {
-        clickedItem.remove();
+        if (clickedItem.hasOwnProperty("completed")) {
+            // task
+            setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+        } else {
+            // event
+            setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
+        }
         setIsModalOpen(false);
-        // setClickedItem({});
+        setClickedItem({});
     };
 
     const onFinish = (values) => {
-        console.log("submit form");
-        clickedItem.setProp("title", values.title);
-        clickedItem.setExtendedProp("tagId", clickedItem.extendedProps.tagId);
-        clickedItem.setExtendedProp("completed", clickedItem.extendedProps.completed);
+        //console.log(values.title)
+        if (clickedItem.hasOwnProperty("completed")) {
+            // task
+            let newItem = {id: clickedItem.id,
+                title: values.title,
+                start: clickedItem.start,
+                end: clickedItem.end,
+                tagId: clickedItem.tagId,
+                completed: clickedItem.completed,}
+            setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+            setTasks(prev => [...prev, newItem])
+        } else {
+            // event
+            let newItem = {id: clickedItem.id,
+                title: values.title,
+                start: clickedItem.start,
+                end: clickedItem.end,
+                tagId: clickedItem.tagId,}
+            setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
+            setEvents(prev => [...prev, newItem])
+        }
+        //clickedItem.remove()
+        //console.log(newItem)
+        setClickedItem({});
     };
 
     const config = {
@@ -132,11 +183,12 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                 onCancel={handleModalCancel}
             >
                 {isClickedTask ? (
-                    <></>
-                ) : (
-                    <Checkbox onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
+                    <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
                         Complete
                     </Checkbox>
+                ) : (
+                    <></>
+                    
                 )}
                 <Button type="primary" onClick={() => setIsFormOpen(true)}>
                     Modify
