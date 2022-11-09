@@ -1,22 +1,19 @@
 import axios from 'axios';
 
-const getAllTags = async (email) => {
+export const getAllTags = async (email) => {
     return axios({
         method: 'get',
-        url: 'localhost:4000/tags',
+        url: `http://localhost:4000/tags?email=${email}`,
         headers: {
             'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({
-            "email": email
-        })
+        }
     });
 }
 
-const createTag = async (email, tagTitle, durationInMinutes) => {
+export const createTag = async (email, tagTitle, durationInMinutes) => {
     return axios({
         method: 'put',
-        url: 'localhost:4000/tags',
+        url: 'http://localhost:4000/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -28,10 +25,10 @@ const createTag = async (email, tagTitle, durationInMinutes) => {
     });
 }
 
-const updateTag = async (email, tagId, tagTitle, durationInMinutes) => {
+export const updateTag = async (email, tagId, tagTitle, durationInMinutes) => {
     return axios({
         method: 'post',
-        url: 'localhost:4000/tags',
+        url: 'http://localhost:4000/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -44,10 +41,10 @@ const updateTag = async (email, tagId, tagTitle, durationInMinutes) => {
     });
 }
 
-const deleteTag = async (email, tagId) => {
+export const deleteTag = async (email, tagId) => {
     return axios({
         method: 'delete',
-        url: 'localhost:4000/tags',
+        url: 'http://localhost:4000/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -56,8 +53,4 @@ const deleteTag = async (email, tagId) => {
             "tagId": tagId
         })
     });
-}
-
-module.exports = {
-    getAllTags, createTag, updateTag, deleteTag
 }
