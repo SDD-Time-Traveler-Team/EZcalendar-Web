@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {Row, Col} from 'antd';
 import Calendar from "./Calendar";
 import NavBar from './NavBar';
-import TagView from "./TagView";
+import TagMenu from "./TagMenu";
 import Authentication from "../utils/Authentication";
 
 const Dashboard = () => {
@@ -29,7 +29,7 @@ const Dashboard = () => {
             <>
                 <Row>
                     <Col span={5}>
-                        <TagView eventTasks={eventTasks} setEventtasks={setEventtasks}/>
+                        <TagMenu eventTasks={eventTasks} setEventtasks={setEventtasks}/>
                     </Col>
                     <Col span={19}>
                         <Calendar eventTasks={eventTasks} setEventtasks={setEventtasks}/>

@@ -3,7 +3,7 @@ import React from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage';
-import Dashboard from './components/ Dashboard'
+import Dashboard from './components/Dashboard'
 
 const App = () => {
 
