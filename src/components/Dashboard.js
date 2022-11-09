@@ -29,7 +29,7 @@ const Dashboard = () => {
             <NavBar setLoginStatus={setLoggedIn} />
             <Row>
                 <Col span={5}>
-                    <TagMenu setEvents={setEvents} setTasks={setTasks} />
+                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks} />
                 </Col>
                 <Col span={19}>
                     <Calendar

@@ -6,9 +6,10 @@ import Authentication from "../utils/Authentication";
 import { getAllTags, createTag, updateTag, deleteTag } from "../utils/Database";
 import VirtualList from "rc-virtual-list";
 
-const TagMenu = ({ setEvents, setTasks }) => {
+const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
     const auth = new Authentication();
     const [tags, setTags] = useState([]); // tag: {id, title, duration}
+
 
     useEffect(() => {
         getAllTags(auth.email)
@@ -88,8 +89,39 @@ const TagMenu = ({ setEvents, setTasks }) => {
     //     ]);
     // }
 
-    const onAddToCalendar = (title, startTime, endTime, isEvent) => {
+    const onAddToCalendar = (tag_id, title, startTime, endTime, isEvent) => {
         //TODO:
+        const id = (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"")
+        // events {id, title, tagId, startTime, endTime}
+        // tasks {id, title, tagId, startTime, endTime, completed}
+        // console.log(isEvent)
+        if(isEvent){
+            setEvents((prev) => [
+                ...prev,
+                {
+                    id: id,
+                    tagId: tag_id,
+                    title: title,
+                    start: startTime,
+                    end: endTime
+                },
+            ]);
+        }
+        else{
+            setTasks((prev) => [
+                ...prev,
+                {
+                    id: id,
+                    tagId: tag_id,
+                    title: title,
+                    start: startTime,
+                    end: endTime,
+                    completed: false
+                },
+            ]);
+        }
+        // console.log(events)
+        // console.log(tasks)
     };
 
     const toHoursAndMinutes = (totalMinutes) => {
