@@ -1,129 +1,157 @@
-import React, { useState } from 'react';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {
-    Card, 
-    Button, 
-    Modal,
-    Input,
-    Form,
-    Divider,
-    DatePicker,
-    TimePicker
-} from 'antd';
+import React, { useState } from "react";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Card, Button, Modal, Input, Form, Divider, DatePicker, TimePicker, Radio } from "antd";
 import Meta from "antd/es/card/Meta";
 
-const Tag = ({ title, duration, id, onDelete, onEdit, putTaginCalendar }) => {
+const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
     const config = {
         rules: [
             {
-                type: 'object',
+                type: "object",
                 required: true,
-                message: 'Please select time',
+                message: "Please select time",
             },
         ],
     };
 
-
     const onFinish = (fieldsValue) => {
         const values = {
             ...fieldsValue,
-            'time-picker': fieldsValue['time-picker'].format('HH:mm'),
+            "time-picker": fieldsValue["time-picker"].format("HH:mm"),
         };
-        setIsModalOpen(false);
-        onEdit(id, values.title, values["time-picker"])
+        setEditModalOpen(false);
+        onEdit(id, values.title, values["time-picker"]);
         //console.log('Received values of form: ', values);
     };
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpenPut, setIsModalOpenPut] = useState(false);
-
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [convertModalOpen, setConvertModalOpen] = useState(false);
+    const [tagEditForm] = Form.useForm();
+    const [eventOrTaskCreateForm] = Form.useForm();
 
     const handleCancel = () => {
-        form.resetFields()
-        setIsModalOpen(false);
-    };
-
-    const showModalPut = () => {
-        setIsModalOpenPut(true);
+        tagEditForm.resetFields();
+        setEditModalOpen(false);
     };
 
     const handleCancelPut = () => {
-        form1.resetFields()
-        setIsModalOpenPut(false);
+        eventOrTaskCreateForm.resetFields();
+        setConvertModalOpen(false);
     };
 
     const onFinishPut = (fieldsValue) => {
         const values = {
             ...fieldsValue,
-            'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
+            "date-time-picker": fieldsValue["date-time-picker"].format("YYYY-MM-DD HH:mm:ss"),
         };
         //console.log(values['date-time-picker'])
-        
-        var time_arr = duration.split(":")
-        var hours = parseInt(time_arr[0])
-        var minutes = parseInt(time_arr[1])
-        var date1 = new Date(values['date-time-picker'])
 
-        date1.setHours(date1.getHours() + hours)
-        date1.setMinutes(date1.getMinutes() + minutes)
-        
-        var mm = date1.getMonth() + 1; 
+        var time_arr = duration.split(":");
+        var hours = parseInt(time_arr[0]);
+        var minutes = parseInt(time_arr[1]);
+        var date1 = new Date(values["date-time-picker"]);
+
+        date1.setHours(date1.getHours() + hours);
+        date1.setMinutes(date1.getMinutes() + minutes);
+
+        var mm = date1.getMonth() + 1;
         var dd = date1.getDate();
-        var dateStr = [date1.getFullYear(),
-                (mm>9 ? '' : '0') + mm,
-                (dd>9 ? '' : '0') + dd
-                ].join('-');
-        var timeStr = date1.toString().split(' ')[4]
+        var dateStr = [
+            date1.getFullYear(),
+            (mm > 9 ? "" : "0") + mm,
+            (dd > 9 ? "" : "0") + dd,
+        ].join("-");
+        var timeStr = date1.toString().split(" ")[4];
 
         //console.log(hours, minutes, dateStr+'T'+timeStr)
 
-        putTaginCalendar(title, values['date-time-picker'].split(' ').join('T'), dateStr+'T'+timeStr)
+        onAddToCalendar(
+            title,
+            values["date-time-picker"].split(" ").join("T"),
+            dateStr + "T" + timeStr
+        );
 
-        form1.resetFields()
-        setIsModalOpenPut(false);
+        eventOrTaskCreateForm.resetFields();
+        setConvertModalOpen(false);
     };
-
-    const [form] = Form.useForm();
-    const [form1] = Form.useForm();
 
     return (
         <>
-            <Card style={{ marginLeft: "2.5%", width: '95%', marginTop: 5 }}
+            <Card
+                style={{ marginLeft: "2.5%", width: "95%", marginTop: 5 }}
                 hoverable={true}
                 actions={[
                     <>
-                        <Button type="text" icon={<PlusOutlined />} onClick={() => showModalPut()}/>
-                        <Modal title="Put the tag in calendar" open={isModalOpenPut} onOk={() => {
-                            form1.validateFields().then(form1.submit)
-                        }} onCancel={handleCancelPut}>
-                            <Divider>
-                                {title}
-                            </Divider>
-                            <Form id="eventTaskCreateForm" form={form1} name="time_related_controls" onFinish={onFinishPut}>
+                        <Button
+                            type="text"
+                            icon={<PlusOutlined />}
+                            onClick={() => setConvertModalOpen(true)}
+                        />
+                        <Modal
+                            title="Put the tag in calendar"
+                            open={convertModalOpen}
+                            onOk={() => {
+                                eventOrTaskCreateForm
+                                    .validateFields()
+                                    .then(eventOrTaskCreateForm.submit);
+                            }}
+                            onCancel={handleCancelPut}
+                        >
+                            <Divider>{title}</Divider>
+                            <Form
+                                id="eventTaskCreateForm"
+                                form={eventOrTaskCreateForm}
+                                name="time_related_controls"
+                                onFinish={onFinishPut}
+                            >
                                 <Form.Item name="date-time-picker" label="start-time" {...config}>
                                     <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Radio.Group>
+                                        <Radio value={true}>Event</Radio>
+                                        <Radio value={false}>Task</Radio>
+                                    </Radio.Group>
                                 </Form.Item>
                             </Form>
                         </Modal>
                     </>,
-                    
-                    <Button type="text" danger icon={<DeleteOutlined />} onClick={() => onDelete(id)} />,
+
+                    <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => onDelete(id)}
+                    />,
                     <>
-                        <Button type="text" icon={<EditOutlined />} onClick={() => showModal()} />
-                        <Modal title="Edit the Tag" open={isModalOpen} onOk={() => {
-                            form.validateFields().then(form.submit)
-                        }} onCancel={handleCancel}>
-                            <Form id="tagCreateForm" form={form} name="time_related_controls" onFinish={onFinish}>
+                        <Button
+                            type="text"
+                            icon={<EditOutlined />}
+                            onClick={() => setEditModalOpen(true)}
+                        />
+                        <Modal
+                            title="Edit the Tag"
+                            open={editModalOpen}
+                            onOk={() => {
+                                tagEditForm.validateFields().then(tagEditForm.submit);
+                            }}
+                            onCancel={handleCancel}
+                        >
+                            <Form
+                                id="tagCreateForm"
+                                form={tagEditForm}
+                                name="time_related_controls"
+                                onFinish={onFinish}
+                            >
                                 <Form.Item
                                     label="Title"
                                     name="title"
-                                    rules={[{
-                                        required: true,
-                                        message: "Please enter a title"
-                                    }]}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter a title",
+                                        },
+                                    ]}
                                     wrapperCol={{
                                         xs: {
                                             span: 0,
@@ -143,11 +171,10 @@ const Tag = ({ title, duration, id, onDelete, onEdit, putTaginCalendar }) => {
                                 </Form.Item>
                             </Form>
                         </Modal>
-                    </>
-
-                ]}>
-                <Meta title={title}
-                    description={duration} />
+                    </>,
+                ]}
+            >
+                <Meta title={title} description={duration} />
             </Card>
         </>
     );
