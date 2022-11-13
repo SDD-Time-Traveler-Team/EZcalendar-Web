@@ -22,8 +22,8 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     // }, [clickedItem]);
 
     const onEventChange = ({ event, oldEvent, revert }) => {
-        console.log(event);
-        console.log(oldEvent);
+        // console.log(event);
+        // console.log(oldEvent);
 
         //TODO: change in db
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
@@ -77,6 +77,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     const onEventClick = ({ event }) => {
+        setClickedItem({});
         setIsModalOpen(true);
         if (event.extendedProps.hasOwnProperty("completed")) {
             setClickedItem({
@@ -84,8 +85,8 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                 title: event.title,
                 start: event.start,
                 end: event.end,
-                tagId: event.tagId,
-                completed: event.completed,
+                tagId: event.extendedProps.tagId,
+                completed: event.extendedProps.completed,
             });
         }
         else{
@@ -94,7 +95,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                 title: event.title,
                 start: event.start,
                 end: event.end,
-                tagId: event.tagId,
+                tagId: event.extendedProps.tagId,
             });
         }
         setIsClickedTask(false);
@@ -108,12 +109,31 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
             .validateFields()
             .then(() => modifyForm.submit())
             .then(() => {
-                if (isClickedTask) {
-                    clickedItem.completed = completeBoxChecked;
+                console.log(clickedItem)
+                if (clickedItem.hasOwnProperty("completed")) {
+                    setClickedItem({
+                        id: clickedItem.id,
+                        title: clickedItem.title,
+                        start: clickedItem.start,
+                        end: clickedItem.end,
+                        tagId: clickedItem.tagId,
+                        completed: true,
+                    });
                     if(clickedItem.completed)
                     {
                         setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
                     }
+                }
+                else
+                {
+                    setClickedItem({
+                        id: clickedItem.id,
+                        title: clickedItem.title,
+                        start: clickedItem.start,
+                        end: clickedItem.end,
+                        tagId: clickedItem.tagId,
+                    });
+                    setEvents((prev) => prev.filter((event) => "event" + event.id !== clickedItem.id));
                 }
                 setIsModalOpen(false);
                 setClickedItem({});
@@ -138,30 +158,33 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     const onFinish = (values) => {
-        //console.log(values.title)
-        if (clickedItem.hasOwnProperty("completed")) {
-            // task
-            let newItem = {id: clickedItem.id,
-                title: values.title,
-                start: clickedItem.start,
-                end: clickedItem.end,
-                tagId: clickedItem.tagId,
-                completed: clickedItem.completed,}
-            setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
-            setTasks(prev => [...prev, newItem])
-        } else {
-            // event
-            let newItem = {id: clickedItem.id,
-                title: values.title,
-                start: clickedItem.start,
-                end: clickedItem.end,
-                tagId: clickedItem.tagId,}
-            setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
-            setEvents(prev => [...prev, newItem])
+        if(Object.keys(clickedItem).length > 0){
+            if (clickedItem.hasOwnProperty("completed")) {
+                // task
+                let newItem = {id: clickedItem.id,
+                    title: values.title,
+                    start: clickedItem.start,
+                    end: clickedItem.end,
+                    tagId: clickedItem.tagId,
+                    completed: clickedItem.completed,}
+                setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+                setTasks(prev => [...prev, newItem])
+            } else {
+                // event
+                let newItem = {id: clickedItem.id,
+                    title: values.title,
+                    start: clickedItem.start,
+                    end: clickedItem.end,
+                    tagId: clickedItem.tagId,}
+                setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
+                setEvents(prev => [...prev, newItem])
+            }
+            //clickedItem.remove()
+            //console.log(newItem)
+            
         }
-        //clickedItem.remove()
-        //console.log(newItem)
-        setClickedItem({});
+        
+        setClickedItem();
     };
 
     const config = {
@@ -212,6 +235,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                                     message: "Please enter a title",
                                 },
                             ]}
+                            required="true"
                             wrapperCol={{
                                 xs: {
                                     span: 0,
