@@ -81,27 +81,27 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
         setIsModalOpen(true);
         if (event.extendedProps.hasOwnProperty("completed")) {
             setClickedItem({
-                id: event.id,
+                id: event.id.replace('task', ''),
                 title: event.title,
-                start: event.start,
-                end: event.end,
+                start: event.start.toISOString().split('.')[0],
+                end: event.end.toISOString().split('.')[0],
                 tagId: event.extendedProps.tagId,
                 completed: event.extendedProps.completed,
             });
         }
         else{
             setClickedItem({
-                id: event.id,
+                id: event.id.replace('event', ''),
                 title: event.title,
-                start: event.start,
-                end: event.end,
+                start: event.start.toISOString().split('.')[0],
+                end: event.end.toISOString().split('.')[0],
                 tagId: event.extendedProps.tagId,
             });
         }
         setIsClickedTask(false);
         setIsFormOpen(false);
         setIsClickedTask(event.extendedProps.hasOwnProperty("completed"));
-        //console.log(clickedItem)
+        console.log(clickedItem)
     };
 
     const handleModalOk = () => {
@@ -121,7 +121,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                     });
                     if(clickedItem.completed)
                     {
-                        setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+                        setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
                     }
                 }
                 else
@@ -133,7 +133,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                         end: clickedItem.end,
                         tagId: clickedItem.tagId,
                     });
-                    setEvents((prev) => prev.filter((event) => "event" + event.id !== clickedItem.id));
+                    setEvents((prev) => prev.filter((event) => event.id !== clickedItem.id));
                 }
                 setIsModalOpen(false);
                 setClickedItem({});
@@ -148,16 +148,21 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     const onDeleteEvent = () => {
         if (clickedItem.hasOwnProperty("completed")) {
             // task
-            setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+            setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
         } else {
             // event
-            setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
+            setEvents((prev) => prev.filter((item) => item.id !== clickedItem.id));
         }
         setIsModalOpen(false);
         setClickedItem({});
     };
 
     const onFinish = (values) => {
+        if(! isFormOpen)
+        {
+            return ;
+        }
+        
         if(Object.keys(clickedItem).length > 0){
             if (clickedItem.hasOwnProperty("completed")) {
                 // task
@@ -167,7 +172,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                     end: clickedItem.end,
                     tagId: clickedItem.tagId,
                     completed: clickedItem.completed,}
-                setTasks((prev) => prev.filter((task) => "task" + task.id !== clickedItem.id));
+                setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
                 setTasks(prev => [...prev, newItem])
             } else {
                 // event
@@ -176,7 +181,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                     start: clickedItem.start,
                     end: clickedItem.end,
                     tagId: clickedItem.tagId,}
-                setEvents((prev) => prev.filter((item) => "event" + item.id !== clickedItem.id));
+                setEvents((prev) => prev.filter((item) => item.id !== clickedItem.id));
                 setEvents(prev => [...prev, newItem])
             }
             //clickedItem.remove()
