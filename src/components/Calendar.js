@@ -3,27 +3,49 @@ import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker } from "antd";
+import { Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row } from "antd";
 import { useEffect } from "react";
+import { click } from "@testing-library/user-event/dist/click";
 //import listPlugin from '@fullcalendar/list';
 
-const Calendar = ({ events, setEvents, tasks, setTasks }) => {
-    //console.log("calendar rendered");
+import moment from 'moment-timezone';
 
+moment.tz.setDefault("America/New_York");
+
+const { RangePicker } = DatePicker;
+
+const rangeConfig = {
+    rules: [
+        {
+        type: 'array',
+        required: true,
+        message: 'Please select time!',
+        },
+    ],
+};
+
+const Calendar = ({ events, setEvents, tasks, setTasks }) => {
+
+    const calendarRef = React.createRef(); // reference to Full Calendar
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
-    const [clickedItem, setClickedItem] = useState();
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [modifyForm] = Form.useForm();
+    const [modifiedEventTitle, setModifiedEventTitle] = useState("");
+    const [modifiedEventTime, setModifiedEventTime] = useState([]);
+    const [clickItemId, setClickItemId] = useState();
+
+    const [newTitleDisabled, setNewTitleDisabled] = useState(true);
+    const [newRangeDisabled, setNewRangeDisabled] = useState(true);
+    //var clickedEventId = "default placeholder";
 
     // useEffect(() => {
-    //     console.log(clickedItem);
-    // }, [clickedItem]);
+    //     clickedEventId = clickItemId
+    // }, [clickItemId])
 
-    const onEventChange = ({ event, oldEvent, revert }) => {
-        // console.log(event);
-        // console.log(oldEvent);
+    //TODO: connect to db :)
+
+    const onEventChange = ({ event, oldEvent, _ }) => {
 
         //TODO: change in db
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
@@ -65,7 +87,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
         }
     };
 
-    const onEventRemove = ({ event, revert }) => {
+    const onEventRemove = ({ event, _ }) => {
         //TODO: remove in db
         if (event.extendedProps.hasOwnProperty("completed")) {
             // task
@@ -76,201 +98,111 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
         }
     };
 
-    const onEventClick = ({ event }) => {
-        setClickedItem({});
+
+    const onEventClick = async ({ event }) => {
         setIsModalOpen(true);
-        if (event.extendedProps.hasOwnProperty("completed")) {
-            setClickedItem({
-                id: event.id.replace('task', ''),
-                title: event.title,
-                start: event.start.toISOString().split('.')[0],
-                end: event.end.toISOString().split('.')[0],
-                tagId: event.extendedProps.tagId,
-                completed: event.extendedProps.completed,
-            });
+        setClickItemId(event.id)
+        setIsClickedTask(false)
+        if(event.extendedProps.hasOwnProperty("completed"))
+        {
+            setIsClickedTask(true)
         }
-        else{
-            setClickedItem({
-                id: event.id.replace('event', ''),
-                title: event.title,
-                start: event.start.toISOString().split('.')[0],
-                end: event.end.toISOString().split('.')[0],
-                tagId: event.extendedProps.tagId,
-            });
-        }
-        setIsClickedTask(false);
-        setIsFormOpen(false);
-        setIsClickedTask(event.extendedProps.hasOwnProperty("completed"));
-        console.log(clickedItem)
+        setModifiedEventTitle(event.title);
+        setNewRangeDisabled(false);
+        setNewTitleDisabled(false);
     };
 
-    const handleModalOk = () => {
-        modifyForm
-            .validateFields()
-            .then(() => modifyForm.submit())
-            .then(() => {
-                console.log(clickedItem)
-                if (clickedItem.hasOwnProperty("completed")) {
-                    setClickedItem({
-                        id: clickedItem.id,
-                        title: clickedItem.title,
-                        start: clickedItem.start,
-                        end: clickedItem.end,
-                        tagId: clickedItem.tagId,
-                        completed: true,
-                    });
-                    if(clickedItem.completed)
-                    {
-                        setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
-                    }
-                }
-                else
-                {
-                    setClickedItem({
-                        id: clickedItem.id,
-                        title: clickedItem.title,
-                        start: clickedItem.start,
-                        end: clickedItem.end,
-                        tagId: clickedItem.tagId,
-                    });
-                    setEvents((prev) => prev.filter((event) => event.id !== clickedItem.id));
-                }
-                setIsModalOpen(false);
-                setClickedItem({});
-                setIsClickedTask(false)
-            })
-    };
-
-    const handleModalCancel = () => {
+    const onModalOk = () => {
+        let event = calendarRef.current.getApi().getEventById(clickItemId);
+        if(modifiedEventTitle !== "" && newTitleDisabled === true)
+        {
+            event.setProp("title", modifiedEventTitle)
+        }
+        if(newRangeDisabled === true)
+        {
+            event.setStart(modifiedEventTime[0].format("YYYY-MM-DDTHH:mm:ss"))
+            event.setEnd(modifiedEventTime[1].format("YYYY-MM-DDTHH:mm:ss"))
+        }
+        if(completeBoxChecked === true)
+        {
+            event.setExtendedProp("completed", completeBoxChecked)
+        }
+        if(event.extendedProps.completed === true)
+        {
+            //event.setProp("backgroundColor", "#B03E45")
+            event.remove()
+        }
         setIsModalOpen(false);
+    };
+
+    const onModalCancel = () => {
+        setIsModalOpen(false)
     };
 
     const onDeleteEvent = () => {
-        if (clickedItem.hasOwnProperty("completed")) {
-            // task
-            setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
-        } else {
-            // event
-            setEvents((prev) => prev.filter((item) => item.id !== clickedItem.id));
-        }
-        setIsModalOpen(false);
-        setClickedItem({});
-    };
-
-    const onFinish = (values) => {
-        if(! isFormOpen)
-        {
-            return ;
-        }
-        
-        if(Object.keys(clickedItem).length > 0){
-            if (clickedItem.hasOwnProperty("completed")) {
-                // task
-                let newItem = {id: clickedItem.id,
-                    title: values.title,
-                    start: clickedItem.start,
-                    end: clickedItem.end,
-                    tagId: clickedItem.tagId,
-                    completed: clickedItem.completed,}
-                setTasks((prev) => prev.filter((task) => task.id !== clickedItem.id));
-                setTasks(prev => [...prev, newItem])
-            } else {
-                // event
-                let newItem = {id: clickedItem.id,
-                    title: values.title,
-                    start: clickedItem.start,
-                    end: clickedItem.end,
-                    tagId: clickedItem.tagId,}
-                setEvents((prev) => prev.filter((item) => item.id !== clickedItem.id));
-                setEvents(prev => [...prev, newItem])
-            }
-            //clickedItem.remove()
-            //console.log(newItem)
-            
-        }
-        
-        setClickedItem();
-    };
-
-    const config = {
-        rules: [
-            {
-                type: "object",
-                required: true,
-                message: "Please select time",
-            },
-        ],
+        calendarRef.current.getApi().getEventById(clickItemId).remove();
+        setIsModalOpen(false)
     };
 
     return (
         <>
+            
             <Modal
                 title="Modify or Delete"
                 open={isModalOpen}
-                onOk={handleModalOk}
-                onCancel={handleModalCancel}
+                //onOk={onModalOk}
+                onOk={onModalOk}
+                onCancel={onModalCancel}
             >
-                {isClickedTask ? (
-                    <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
-                        Complete
-                    </Checkbox>
-                ) : (
-                    <></>
-                    
-                )}
-                <Button type="primary" onClick={() => setIsFormOpen(true)}>
-                    Modify
-                </Button>
-                <Button type="primary" danger onClick={onDeleteEvent}>
-                    Delete
-                </Button>
-                {isFormOpen ? (
-                    <Form
-                        id="tagCreateForm"
-                        form={modifyForm}
-                        name="time_related_controls"
-                        onFinish={onFinish}
-                    >
-                        <Form.Item
-                            label="Title"
-                            name="title"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter a title",
-                                },
-                            ]}
-                            required="true"
-                            wrapperCol={{
-                                xs: {
-                                    span: 0,
-                                    offset: 0,
-                                },
-                                sm: {
-                                    span: 16,
-                                    offset: 0,
-                                },
-                            }}
-                        >
-                            <Input />
-                        </Form.Item>
 
-                        {/* TODO: change start time */}
-                        {/* <Form.Item name="date-time-picker" label="start-time" {...config}>
-                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                        </Form.Item> */}
-                    </Form>
+                {false ? (
+                    <Divider>
+                        {/* Must include this divider. Do not delete it! */}
+                        {clickItemId}
+                    </Divider>
                 ) : (
                     <></>
                 )}
+                <Row justify="center">
+                    {isClickedTask ? (
+                        <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
+                            Complete
+                        </Checkbox>
+                    ) : (
+                        <></>
+                    )}
+                    <Button type="primary" danger size="large" onClick={onDeleteEvent}>
+                        Delete
+                    </Button>
+                </Row>
+                
+
+                <Row>
+                    <Checkbox checked={newRangeDisabled} onChange={(e) => {setNewRangeDisabled(e.target.checked)}}>Modify Time</Checkbox>
+                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled} onChange={(value) => {setModifiedEventTime(value);}}/>
+                </Row>
+                
+                <Row>
+                    <Checkbox checked={newTitleDisabled} onChange={(e) => {setNewTitleDisabled(e.target.checked)}}>Modify Title</Checkbox>
+                    <Input 
+                        showCount 
+                        maxLength={20}
+                        defaultValue=""
+                        onChange={(e) => {setModifiedEventTitle(e.target.value)}}
+                        disabled={!newTitleDisabled}
+                        placeholder={modifiedEventTitle}
+                    />
+                </Row>
             </Modal>
             <FullCalendar
+                ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView="timeGridWeek"
                 headerToolbar={{
                     center: "dayGridMonth,timeGridWeek,timeGridDay",
                 }}
                 editable
+                timeZone='EST'
                 events={events.concat(tasks).map((event) => {
                     const newEvent = {
                         title: event.title,
