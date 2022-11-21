@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { getAllTasks, createTask, updateTask, deleteTask } = require("../utils/database.js");
 
-// GET /tags read all events
+// GET /tasks read all tasks
 router.get("/", (req, res) => {
     const { email } = req.query;
     getAllTasks(email).then((result) => {
@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
     });
 });
 
-// Put /tags create a new event
+// Put /tasks create a new task
 router.put("/", (req, res) => {
     const { email, title, tag_id, description, start_time, end_time, completed } = req.body;
     createTask(email, title, tag_id, description, start_time, end_time, completed).then((result) => {
@@ -24,7 +24,7 @@ router.put("/", (req, res) => {
     });
 });
 
-// POST /event update with specific id
+// POST /tasks update with specific id
 router.post("/", (req, res) => {
     const { tasks_id, email, title, tag_id, description, start_time, end_time, completed } = req.body;
     updateTask(tasks_id, email, title, tag_id, description, start_time, end_time, completed).then((result) => {
@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
     });
 });
 
-// DELETE /event delete with specific id
+// DELETE /tasks delete with specific id
 router.delete("/", (req, res) => {
     const { email, tasks_id } = req.body;
     deleteTask(email, tasks_id).then((result) => {
