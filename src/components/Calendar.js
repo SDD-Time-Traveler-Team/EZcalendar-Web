@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row } from "antd";
-import { useEffect } from "react";
-import { click } from "@testing-library/user-event/dist/click";
+import {Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row} from "antd";
+import {useEffect} from "react";
+import {click} from "@testing-library/user-event/dist/click";
 //import listPlugin from '@fullcalendar/list';
 
 import moment from 'moment-timezone';
 
 moment.tz.setDefault("America/New_York");
 
-const { RangePicker } = DatePicker;
+const {RangePicker} = DatePicker;
 
 const rangeConfig = {
     rules: [
         {
-        type: 'array',
-        required: true,
-        message: 'Please select time!',
+            type: 'array',
+            required: true,
+            message: 'Please select time!',
         },
     ],
 };
 
-const Calendar = ({ events, setEvents, tasks, setTasks }) => {
+const Calendar = ({events, setEvents, tasks, setTasks}) => {
 
     const calendarRef = React.createRef(); // reference to Full Calendar
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
@@ -45,7 +45,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     //TODO: connect to db :)
 
-    const onEventChange = ({ event, oldEvent, _ }) => {
+    const onEventChange = ({event, oldEvent, _}) => {
 
         //TODO: change in db
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
@@ -87,7 +87,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
         }
     };
 
-    const onEventRemove = ({ event, _ }) => {
+    const onEventRemove = ({event, _}) => {
         //TODO: remove in db
         if (event.extendedProps.hasOwnProperty("completed")) {
             // task
@@ -99,13 +99,13 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
 
-    const onEventClick = async ({ event }) => {
+    const onEventClick = async ({event}) => {
         setIsModalOpen(true);
         setClickItemId(event.id)
         setIsClickedTask(false)
-        if(event.extendedProps.hasOwnProperty("completed"))
-        {
+        if (event.extendedProps.hasOwnProperty("completed")) {
             setIsClickedTask(true)
+            setCompleteBoxChecked(event.extendedProps.completed)
         }
         setModifiedEventTitle(event.title);
         setNewRangeDisabled(false);
@@ -114,23 +114,17 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     const onModalOk = () => {
         let event = calendarRef.current.getApi().getEventById(clickItemId);
-        if(modifiedEventTitle !== "" && newTitleDisabled === true)
-        {
+        if (modifiedEventTitle !== "" && newTitleDisabled === true) {
             event.setProp("title", modifiedEventTitle)
         }
-        if(newRangeDisabled === true)
-        {
+        if (newRangeDisabled === true) {
             event.setStart(modifiedEventTime[0].format("YYYY-MM-DDTHH:mm:ss"))
             event.setEnd(modifiedEventTime[1].format("YYYY-MM-DDTHH:mm:ss"))
         }
-        if(completeBoxChecked === true)
+        if(isClickedTask)
         {
             event.setExtendedProp("completed", completeBoxChecked)
-        }
-        if(event.extendedProps.completed === true)
-        {
-            //event.setProp("backgroundColor", "#B03E45")
-            event.remove()
+            event.setExtendedProp("backgroundColor", "#B0C4DE")
         }
         setIsModalOpen(false);
     };
@@ -146,7 +140,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     return (
         <>
-            
+
             <Modal
                 title="Modify or Delete"
                 open={isModalOpen}
@@ -165,7 +159,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                 )}
                 <Row justify="center">
                     {isClickedTask ? (
-                        <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
+                        <Checkbox checked={completeBoxChecked} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
                             Complete
                         </Checkbox>
                     ) : (
@@ -175,20 +169,27 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
                         Delete
                     </Button>
                 </Row>
-                
+
 
                 <Row>
-                    <Checkbox checked={newRangeDisabled} onChange={(e) => {setNewRangeDisabled(e.target.checked)}}>Modify Time</Checkbox>
-                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled} onChange={(value) => {setModifiedEventTime(value);}}/>
+                    <Checkbox checked={newRangeDisabled} onChange={(e) => {
+                        setNewRangeDisabled(e.target.checked)
+                    }}>Modify Time</Checkbox>
+                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled}
+                                 onChange={(value) => setModifiedEventTime(value)}/>
                 </Row>
-                
+
                 <Row>
-                    <Checkbox checked={newTitleDisabled} onChange={(e) => {setNewTitleDisabled(e.target.checked)}}>Modify Title</Checkbox>
-                    <Input 
-                        showCount 
+                    <Checkbox checked={newTitleDisabled} onChange={(e) => {
+                        setNewTitleDisabled(e.target.checked)
+                    }}>Modify Title</Checkbox>
+                    <Input
+                        showCount
                         maxLength={20}
                         defaultValue=""
-                        onChange={(e) => {setModifiedEventTitle(e.target.value)}}
+                        onChange={(e) => {
+                            setModifiedEventTitle(e.target.value)
+                        }}
                         disabled={!newTitleDisabled}
                         placeholder={modifiedEventTitle}
                     />
