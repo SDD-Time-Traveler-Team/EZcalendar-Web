@@ -54,3 +54,60 @@ export const deleteTag = async (email, tagId) => {
         })
     });
 }
+
+export const getAllEvents = async (email) => {
+    return axios({
+        method: 'get',
+        url: `http://localhost:4000/events?email=${email}`,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+export const createEvent = async (email, title, tagId, description = "", startTime, endTime) => {
+    return axios({
+        method: 'put',
+        url: 'http://localhost:4000/events',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "email": email,
+            "title": title,
+            "tag_id": tagId,
+            "description": description,
+            "start_time": startTime,
+            "end_time": endTime
+        })
+    });
+}
+
+export const getAllTasks = async (email) => {
+    return axios({
+        method: 'get',
+        url: `http://localhost:4000/tasks?email=${email}`,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+export const createTask = async (email, title, tagId, description = "", startTime, endTime, completed) => {
+    return axios({
+        method: 'put',
+        url: 'http://localhost:4000/tasks',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "email": email,
+            "title": title,
+            "tag_id": tagId,
+            "description": description,
+            "start_time": startTime,
+            "end_time": endTime,
+            "completed": completed
+        })
+    });
+}

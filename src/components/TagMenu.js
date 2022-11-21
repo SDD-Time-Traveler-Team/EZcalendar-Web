@@ -3,7 +3,7 @@ import {Row, Col, List} from "antd";
 import TagCreate from "./TagCreate";
 import Tag from "./Tag";
 import Authentication from "../utils/Authentication";
-import {getAllTags, createTag, updateTag, deleteTag} from "../utils/Database";
+import {getAllTags, createTag, updateTag, deleteTag, createEvent, createTask} from "../utils/Database";
 import VirtualList from "rc-virtual-list";
 
 const TagMenu = ({setEvents, setTasks}) => {
@@ -86,34 +86,44 @@ const TagMenu = ({setEvents, setTasks}) => {
     //handle adding tags to the calendar from tag section
     const onAddToCalendar = (tag_id, title, startTime, endTime, isEvent) => {
         //TODO: connect db
-        const id = (performance.now().toString(36) + Math.random().toString(36)).replace(/\./g, "")
 
         // events {id, title, tagId, startTime, endTime}
         // tasks {id, title, tagId, startTime, endTime, completed}
 
         if (isEvent) {
-            setEvents((prev) => [
-                ...prev,
-                {
-                    id: id,
-                    tagId: tag_id,
-                    title: title,
-                    start: startTime,
-                    end: endTime
-                },
-            ]);
+            createEvent(auth.email, title, tag_id, "", startTime, endTime)
+                .then((res) => {
+                    setEvents((prev) => [
+                        ...prev,
+                        {
+                            id: res.data.id,
+                            tagId: res.data.tag_id,
+                            title: res.data.title,
+                            start: res.data.start_time,
+                            end: res.data.end_time
+                        },
+                    ]);
+                }).catch((err) => {
+                console.log(err);
+            })
+
         } else {
-            setTasks((prev) => [
-                ...prev,
-                {
-                    id: id,
-                    tagId: tag_id,
-                    title: title,
-                    start: startTime,
-                    end: endTime,
-                    completed: false
-                },
-            ]);
+            createTask(auth.email, title, tag_id, "", startTime, endTime, false)
+                .then((res) => {
+                    setTasks((prev) => [
+                        ...prev,
+                        {
+                            id: res.data.id,
+                            tagId: res.data.tag_id,
+                            title: res.data.title,
+                            start: res.data.start_time,
+                            end: res.data.end_time,
+                            completed: res.data.completed
+                        },
+                    ]);
+                }).catch((err) => {
+                    console.log(err)
+            })
         }
     };
 
