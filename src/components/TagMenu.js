@@ -10,6 +10,7 @@ const TagMenu = ({setEvents, setTasks}) => {
     const auth = new Authentication();
     const [tags, setTags] = useState([]); // tag: {id, title, duration}
 
+    //fetch user's tags from server upon entering calendar page
     useEffect(() => {
         getAllTags(auth.email)
             .then((res) => {
@@ -26,6 +27,7 @@ const TagMenu = ({setEvents, setTasks}) => {
             });
     }, []);
 
+    //handle creating tag in the tag section
     const onCreateTag = (tagTitle, tagDuration) => {
         const durationInMinutes = toMinutes(tagDuration);
 
@@ -45,6 +47,7 @@ const TagMenu = ({setEvents, setTasks}) => {
             });
     };
 
+    //handle editing tag in the tag section
     const onEditTag = (id, title, durationInHoursAndMinutes) => {
         const durationInMinutes = toMinutes(durationInHoursAndMinutes);
 
@@ -69,6 +72,7 @@ const TagMenu = ({setEvents, setTasks}) => {
             });
     };
 
+    //handle deleting tag in the tag section
     const onDeleteTag = (id) => {
         deleteTag(auth.email, id)
             .then((res) => {
@@ -79,6 +83,7 @@ const TagMenu = ({setEvents, setTasks}) => {
             });
     };
 
+    //handle adding tags to the calendar from tag section
     const onAddToCalendar = (tag_id, title, startTime, endTime, isEvent) => {
         //TODO: connect db
         const id = (performance.now().toString(36) + Math.random().toString(36)).replace(/\./g, "")
@@ -112,6 +117,7 @@ const TagMenu = ({setEvents, setTasks}) => {
         }
     };
 
+    //convert minutes to hours and minutes
     const toHoursAndMinutes = (totalMinutes) => {
         const hours = Math.floor(totalMinutes / 60);
         const hoursStr = hours < 10 ? `0${hours}` : hours.toString();
@@ -120,6 +126,7 @@ const TagMenu = ({setEvents, setTasks}) => {
         return hoursStr + ":" + minutesStr;
     };
 
+    //convert hours and minutes to minutes
     const toMinutes = (hoursAndMinutes) => {
         const splitDuration = hoursAndMinutes.split(":");
         const durationInMinutes = parseInt(splitDuration[0]) * 60 + parseInt(splitDuration[1]);

@@ -13,7 +13,7 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
             },
         ],
     };
-
+    s
     const onFinish = (fieldsValue) => {
         const values = {
             ...fieldsValue,
