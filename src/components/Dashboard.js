@@ -5,6 +5,7 @@ import Calendar from "./Calendar";
 import NavBar from "./NavBar";
 import TagMenu from "./TagMenu";
 import Authentication from "../utils/Authentication";
+import {getAllEvents, getAllTasks} from "../utils/Database";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
@@ -22,7 +23,33 @@ const Dashboard = () => {
             console.log("not logged in, redirect to /login");
             console.log(auth.user);
         }
-    }, [auth.user, loggedIn, navigate]);
+
+        getAllEvents(auth.email).then((res) => {
+            setEvents((prev) => res.data.map((event) => ({
+                id: event.id,
+                title: event.title,
+                tagId: event.tag_id,
+                startTime:event.start_time,
+                endTime: event.end_time
+            })))
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        getAllTasks(auth.email).then((res) => {
+            setTasks((prev) => res.data.map((task) => ({
+                id: task.id,
+                title: task.title,
+                tagId: task.tag_id,
+                startTime:task.start_time,
+                endTime: task.end_time,
+                completed: task.completed
+            })))
+        }).catch((err) => {
+            console.log(err)
+        })
+
+    }, [auth.email, auth.user, loggedIn, navigate]);
 
     return (
         <>
