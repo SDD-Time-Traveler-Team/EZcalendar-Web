@@ -7,6 +7,7 @@ import Authentication from "../utils/Authentication";
 export default function NavBar({setLoginStatus}) {
     const [auth] = useState(new Authentication());
 
+    //handle signing out
     const onClickSignOut = async () => {
         auth.signOut().then(() => {
             auth.user = null;
@@ -18,6 +19,7 @@ export default function NavBar({setLoginStatus}) {
         setLoginStatus(false);
     }
 
+    //menu component
     const menu = <Menu
         items={[
             {

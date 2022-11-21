@@ -24,6 +24,7 @@ const Dashboard = () => {
         }
     }, [auth.user, loggedIn, navigate]);
 
+    //dashboard components
     return (
         <>
             <NavBar setLoginStatus={setLoggedIn}/>

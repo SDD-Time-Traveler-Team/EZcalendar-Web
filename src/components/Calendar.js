@@ -1,29 +1,33 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {Button, Checkbox, DatePicker, Input, Modal, Divider, Row} from "antd";
+import { Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row } from "antd";
+import { useEffect } from "react";
+import { click } from "@testing-library/user-event/dist/click";
+//import listPlugin from '@fullcalendar/list';
+
 import moment from 'moment-timezone';
 
 moment.tz.setDefault("America/New_York");
 
-const {RangePicker} = DatePicker;
+const { RangePicker } = DatePicker;
 
 const rangeConfig = {
     rules: [
         {
-            type: 'array',
-            required: true,
-            message: 'Please select time!',
+        type: 'array',
+        required: true,
+        message: 'Please select time!',
         },
     ],
 };
 
-const Calendar = ({events, setEvents, tasks, setTasks}) => {
+const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     const calendarRef = React.createRef(); // reference to Full Calendar
-
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
@@ -33,9 +37,15 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
 
     const [newTitleDisabled, setNewTitleDisabled] = useState(true);
     const [newRangeDisabled, setNewRangeDisabled] = useState(true);
+    //var clickedEventId = "default placeholder";
+
+    // useEffect(() => {
+    //     clickedEventId = clickItemId
+    // }, [clickItemId])
 
     //TODO: connect to db :)
-    const onEventChange = ({event, oldEvent, _}) => {
+    //handle updating event and task object outside of the calendar
+    const onEventChange = ({ event, oldEvent, _ }) => {
 
         //TODO: change in db
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
@@ -77,7 +87,8 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
         }
     };
 
-    const onEventRemove = ({event, _}) => {
+    //handle removing things from 
+    const onEventRemove = ({ event, _ }) => {
         //TODO: remove in db
         if (event.extendedProps.hasOwnProperty("completed")) {
             // task
@@ -88,11 +99,13 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
         }
     };
 
-    const onEventClick = async ({event}) => {
+    //handle events after clicking on calendar items
+    const onEventClick = async ({ event }) => {
         setIsModalOpen(true);
         setClickItemId(event.id)
         setIsClickedTask(false)
-        if (event.extendedProps.hasOwnProperty("completed")) {
+        if(event.extendedProps.hasOwnProperty("completed"))
+        {
             setIsClickedTask(true)
             setCompleteBoxChecked(event.extendedProps.completed)
         }
@@ -101,39 +114,49 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
         setNewTitleDisabled(false);
     };
 
+    //handle modal OK button
     const onModalOk = () => {
         let event = calendarRef.current.getApi().getEventById(clickItemId);
-        if (modifiedEventTitle !== "" && newTitleDisabled === true) {
+        if(modifiedEventTitle !== "" && newTitleDisabled === true)
+        {
             event.setProp("title", modifiedEventTitle)
         }
-        if (newRangeDisabled === true) {
+        if(newRangeDisabled === true)
+        {
             event.setStart(modifiedEventTime[0].format("YYYY-MM-DDTHH:mm:ss"))
             event.setEnd(modifiedEventTime[1].format("YYYY-MM-DDTHH:mm:ss"))
         }
-        if (isClickedTask) {
-            event.setExtendedProp("completed", completeBoxChecked)
-            event.setExtendedProp("backgroundColor", "#B0C4DE")
+        event.setExtendedProp("completed", completeBoxChecked)
+        if(event.extendedProps.completed === true)
+        {
+            event.setProp("backgroundColor", "red")
+            console.log(event.backgroundColor)
         }
         setIsModalOpen(false);
     };
 
+    //handle modal cancel button
     const onModalCancel = () => {
         setIsModalOpen(false)
     };
 
+    //handle deleting event from calendar
     const onDeleteEvent = () => {
         calendarRef.current.getApi().getEventById(clickItemId).remove();
         setIsModalOpen(false)
     };
 
+    //components in calendar
     return (
         <>
             <Modal
                 title="Modify or Delete"
                 open={isModalOpen}
+                //onOk={onModalOk}
                 onOk={onModalOk}
                 onCancel={onModalCancel}
             >
+
                 {false ? (
                     <Divider>
                         {/* Must include this divider. Do not delete it! */}
@@ -142,13 +165,9 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                 ) : (
                     <></>
                 )}
-
                 <Row justify="center">
                     {isClickedTask ? (
-                        <Checkbox
-                            checked={completeBoxChecked}
-                            onChange={(e) => setCompleteBoxChecked(e.target.checked)}
-                        >
+                        <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
                             Complete
                         </Checkbox>
                     ) : (
@@ -158,35 +177,20 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                         Delete
                     </Button>
                 </Row>
+                
 
                 <Row>
-                    <Checkbox
-                        checked={newRangeDisabled}
-                        onChange={(e) => setNewRangeDisabled(e.target.checked)}
-                    >
-                        Modify Time
-                    </Checkbox>
-                    <RangePicker
-                        {...rangeConfig}
-                        showTime
-                        format="YYYY-MM-DD HH:mm:ss"
-                        disabled={!newRangeDisabled}
-                        onChange={(value) => setModifiedEventTime(value)}
-                    />
+                    <Checkbox checked={newRangeDisabled} onChange={(e) => {setNewRangeDisabled(e.target.checked)}}>Modify Time</Checkbox>
+                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled} onChange={(value) => {setModifiedEventTime(value);}}/>
                 </Row>
-
+                
                 <Row>
-                    <Checkbox
-                        checked={newTitleDisabled}
-                        onChange={(e) => setNewTitleDisabled(e.target.checked)}
-                    >
-                        Modify Title
-                    </Checkbox>
-                    <Input
-                        showCount
+                    <Checkbox checked={newTitleDisabled} onChange={(e) => {setNewTitleDisabled(e.target.checked)}}>Modify Title</Checkbox>
+                    <Input 
+                        showCount 
                         maxLength={20}
                         defaultValue=""
-                        onChange={(e) => setModifiedEventTitle(e.target.value)}
+                        onChange={(e) => {setModifiedEventTitle(e.target.value)}}
                         disabled={!newTitleDisabled}
                         placeholder={modifiedEventTitle}
                     />
@@ -216,11 +220,11 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                         // task
                         newEvent.id = `task${event.id}`;
                         newEvent.extendedProps.completed = event.completed;
-                        newEvent.backgroundColor = "#FFE4B5";
+                        newEvent.backgroundColor = "#1E90FF";
                     } else {
                         // event
                         newEvent.id = `event${event.id}`;
-                        newEvent.backgroundColor = "#1E90FF";
+                        newEvent.backgroundColor = "#FFE4B5";
                     }
 
                     return newEvent;
