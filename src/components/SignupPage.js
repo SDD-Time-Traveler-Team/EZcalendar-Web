@@ -1,16 +1,10 @@
-import {
-    Button,
-    Form,
-    Input,
-    Modal,
-    Row,
-} from 'antd';
-import React, { useState } from "react";
-import Authentication from "../api/Authentication";
-import { useNavigate } from "react-router-dom";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Button, Form, Input, Modal, Row, InputNumber, Alert} from 'antd';
+import Authentication from "../utils/Authentication";
+
 
 const {TextArea} = Input;
-
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -44,32 +38,72 @@ const tailFormItemLayout = {
 
 const SignupPage = () => {
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [auth, setAuth] = useState(new Authentication());
+    const [auth] = useState(new Authentication());
     const [code, setCode] = useState("");
+    const [alertOpen, setAlertOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const navigate = useNavigate();
 
+    const hideModal = () => {
+        setConfirmModalOpen(false);
+    };
+
+
     const onSignUp = (values) => {
         console.log('Received values of form: ', values.email);
-        auth.signUp(values.email, values.password).then(() => {
+        auth.signUp(values.email, values.password).then((user) => {
             setUserEmail(values.email);
             setConfirmModalOpen(true);
+        }).catch((err) => {
+            console.log(`signup fail ${err}`);
         });
     };
 
     const onConfirmSignUp = () => {
         auth.confirmSignUp(userEmail, code).then(() => {
-            console.log("signup confirmed");
+            console.log("confirmation succeed");
             navigate("/login");
+        }).catch((err) => {
+            console.log(`confirmation fail ${err}`);
+            setAlertOpen(true);
         });
+    };
+
+
+    const onClose = (e) => {
+        console.log(e, 'I was closed.');
+        setAlertOpen(false);
     };
 
     return (
         <Row type="flex" justify="center" align="middle" style={{minHeight: '75vh'}}>
-            <Modal title={"Confirm SignUp"} open={confirmModalOpen} onOk={onConfirmSignUp}>
-                <TextArea onChange={(e) => setCode(e.target.value)}/>
+            <Modal
+                title={"Email Confirmation Code"}
+                open={confirmModalOpen}
+                onOk={onConfirmSignUp}
+                onCancel={hideModal}
+                okText="Confirm"
+                cancelText="Cancel">
+                <Alert
+                    message="Please check your email for confirmation code!"
+                    type="success"
+                    closable
+                    onClose={onClose}
+                />
+                <Input align='middle' type='number' onChange={(e) => setCode(e.target.value)} size='large'
+                       max={6} min={1}/>
+                {alertOpen ?
+                    (<Alert
+                        message="Error"
+                        description="Incorrect Email Confirmation Code!"
+                        type="error"
+                        closable
+                        onClose={onClose}
+                    />)
+                    :
+                    <></>
+                }
             </Modal>
-
             <Form
                 {...formItemLayout}
                 name="register"
@@ -103,6 +137,10 @@ const SignupPage = () => {
                         {
                             required: true,
                             message: 'Please input your password!',
+                        },
+                        {
+                            min: 8,
+                            message: 'Please input your password with minimum length of 8!',
                         },
                     ]}
                     hasFeedback
@@ -142,6 +180,7 @@ const SignupPage = () => {
             </Form>
         </Row>
     );
+
 };
 
 export default SignupPage;
