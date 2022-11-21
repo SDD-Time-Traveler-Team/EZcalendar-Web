@@ -1,18 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     Modal,
     Button,
     Input,
-    Radio,
     Form,
-    TimePicker,
-    Cascader,
-    InputNumber,
-    Select,
-    Switch,
-    TreeSelect,
-    DatePicker,
-
+    TimePicker
 } from 'antd';
 
 const config = {
@@ -28,6 +20,7 @@ const config = {
 const TagCreate = ({CreateTag}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form] = Form.useForm();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -39,34 +32,27 @@ const TagCreate = ({CreateTag}) => {
     };
 
     const onFinish = (fieldsValue) => {
-        //const rangeValue = fieldsValue['range-picker'];
-        //const rangeTimeValue = fieldsValue['range-time-picker'];
         const values = {
             ...fieldsValue,
-            // 'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-            // 'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
-            // 'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
-            // 'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
-            // 'range-time-picker': [
-            // rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-            // rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-            // ],
             'time-picker': fieldsValue['time-picker'].format('HH:mm'),
         };
         setIsModalOpen(false);
         CreateTag(values.title, values["time-picker"])
-        //console.log('Received values of form: ', values);
     };
-    const [form] = Form.useForm();
+
     return (
         <>
             <Button type="primary" size="large" onClick={showModal}>
                 Create Tag
             </Button>
-            <Modal title="Create a tag" open={isModalOpen} onOk={() => {
-                form.validateFields().then(form.submit)}} onCancel={handleCancel}>
+            <Modal
+                title="Create a tag"
+                open={isModalOpen}
+                onOk={() => form.validateFields().then(form.submit)}
+                onCancel={handleCancel}
+            >
                 <Form id="tagCreateForm" form={form} name="time_related_controls" onFinish={onFinish}>
-                    <Form.Item 
+                    <Form.Item
                         label="Title"
                         name="title"
                         rules={[{

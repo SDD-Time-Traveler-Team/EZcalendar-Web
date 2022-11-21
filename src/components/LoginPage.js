@@ -15,7 +15,6 @@ const LoginPage = () => {
             setAlertOpen(false);
             console.log('sign in success');
             navigate("/dashboard");
-
         }).catch((err) => {
             console.log('sign in fail:', err);
             setAlertOpen(true);
@@ -114,7 +113,6 @@ const LoginPage = () => {
                     </Button> Or <a href="/signup">register now!</a>
                 </Form.Item>
             </Form>
-
         </Row>
     );
 };

@@ -1,10 +1,8 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Button, Form, Input, Modal, Row, InputNumber, Alert} from 'antd';
+import {Button, Form, Input, Modal, Row, Alert} from 'antd';
 import Authentication from "../utils/Authentication";
 
-
-const {TextArea} = Input;
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -47,7 +45,6 @@ const SignupPage = () => {
     const hideModal = () => {
         setConfirmModalOpen(false);
     };
-
 
     const onSignUp = (values) => {
         console.log('Received values of form: ', values.email);

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Row, Col } from "antd";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Row, Col} from "antd";
 import Calendar from "./Calendar";
 import NavBar from "./NavBar";
 import TagMenu from "./TagMenu";
@@ -26,10 +26,10 @@ const Dashboard = () => {
 
     return (
         <>
-            <NavBar setLoginStatus={setLoggedIn} />
+            <NavBar setLoginStatus={setLoggedIn}/>
             <Row>
                 <Col span={5}>
-                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks} />
+                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks}/>
                 </Col>
                 <Col span={19}>
                     <Calendar

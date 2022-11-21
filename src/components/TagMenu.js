@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, List } from "antd";
+import React, {useEffect, useState} from "react";
+import {Row, Col, List} from "antd";
 import TagCreate from "./TagCreate";
 import Tag from "./Tag";
 import Authentication from "../utils/Authentication";
-import { getAllTags, createTag, updateTag, deleteTag } from "../utils/Database";
+import {getAllTags, createTag, updateTag, deleteTag} from "../utils/Database";
 import VirtualList from "rc-virtual-list";
 
-const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
+const TagMenu = ({setEvents, setTasks}) => {
     const auth = new Authentication();
     const [tags, setTags] = useState([]); // tag: {id, title, duration}
-
 
     useEffect(() => {
         getAllTags(auth.email)
@@ -48,6 +47,7 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
 
     const onEditTag = (id, title, durationInHoursAndMinutes) => {
         const durationInMinutes = toMinutes(durationInHoursAndMinutes);
+
         updateTag(auth.email, id, title, durationInMinutes)
             .then((res) => {
                 setTags((prev) =>
@@ -79,23 +79,14 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             });
     };
 
-    // const putTaginCalendar = (eventTasksTitle, eventTasksStart, eventTasksEnd) => {
-    //     setEventtasks(current => [...current,
-    //         {
-    //             title: eventTasksTitle,
-    //             start: eventTasksStart,
-    //             end: eventTasksEnd
-    //         }
-    //     ]);
-    // }
-
     const onAddToCalendar = (tag_id, title, startTime, endTime, isEvent) => {
-        //TODO:
-        const id = (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"")
+        //TODO: connect db
+        const id = (performance.now().toString(36) + Math.random().toString(36)).replace(/\./g, "")
+
         // events {id, title, tagId, startTime, endTime}
         // tasks {id, title, tagId, startTime, endTime, completed}
-        // console.log(isEvent)
-        if(isEvent){
+
+        if (isEvent) {
             setEvents((prev) => [
                 ...prev,
                 {
@@ -106,8 +97,7 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
                     end: endTime
                 },
             ]);
-        }
-        else{
+        } else {
             setTasks((prev) => [
                 ...prev,
                 {
@@ -120,8 +110,6 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
                 },
             ]);
         }
-        // console.log(events)
-        // console.log(tasks)
     };
 
     const toHoursAndMinutes = (totalMinutes) => {
@@ -143,21 +131,17 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             <Col span={24}>
                 <Row justify="center">
                     <Col>
-                        <TagCreate CreateTag={onCreateTag} />
+                        <TagCreate CreateTag={onCreateTag}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <List
-                            bordered="false"
-                            //style={{height:"100vh"}}
-                        >
+                        <List bordered="false">
                             <VirtualList
                                 data={Object.entries(tags)}
                                 height={750}
                                 itemHeight={47}
                                 itemKey="index"
-                                //onScroll={onScroll}
                             >
                                 {(item) => (
                                     <List.Item>
