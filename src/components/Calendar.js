@@ -3,11 +3,7 @@ import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row} from "antd";
-import {useEffect} from "react";
-import {click} from "@testing-library/user-event/dist/click";
-//import listPlugin from '@fullcalendar/list';
-
+import {Button, Checkbox, DatePicker, Input, Modal, Divider, Row} from "antd";
 import moment from 'moment-timezone';
 
 moment.tz.setDefault("America/New_York");
@@ -37,14 +33,8 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
 
     const [newTitleDisabled, setNewTitleDisabled] = useState(true);
     const [newRangeDisabled, setNewRangeDisabled] = useState(true);
-    //var clickedEventId = "default placeholder";
-
-    // useEffect(() => {
-    //     clickedEventId = clickItemId
-    // }, [clickItemId])
 
     //TODO: connect to db :)
-
     const onEventChange = ({event, oldEvent, _}) => {
 
         //TODO: change in db
@@ -98,7 +88,6 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
         }
     };
 
-
     const onEventClick = async ({event}) => {
         setIsModalOpen(true);
         setClickItemId(event.id)
@@ -121,8 +110,7 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
             event.setStart(modifiedEventTime[0].format("YYYY-MM-DDTHH:mm:ss"))
             event.setEnd(modifiedEventTime[1].format("YYYY-MM-DDTHH:mm:ss"))
         }
-        if(isClickedTask)
-        {
+        if (isClickedTask) {
             event.setExtendedProp("completed", completeBoxChecked)
             event.setExtendedProp("backgroundColor", "#B0C4DE")
         }
@@ -140,15 +128,12 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
 
     return (
         <>
-
             <Modal
                 title="Modify or Delete"
                 open={isModalOpen}
-                //onOk={onModalOk}
                 onOk={onModalOk}
                 onCancel={onModalCancel}
             >
-
                 {false ? (
                     <Divider>
                         {/* Must include this divider. Do not delete it! */}
@@ -157,9 +142,13 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                 ) : (
                     <></>
                 )}
+
                 <Row justify="center">
                     {isClickedTask ? (
-                        <Checkbox checked={completeBoxChecked} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
+                        <Checkbox
+                            checked={completeBoxChecked}
+                            onChange={(e) => setCompleteBoxChecked(e.target.checked)}
+                        >
                             Complete
                         </Checkbox>
                     ) : (
@@ -170,26 +159,34 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                     </Button>
                 </Row>
 
-
                 <Row>
-                    <Checkbox checked={newRangeDisabled} onChange={(e) => {
-                        setNewRangeDisabled(e.target.checked)
-                    }}>Modify Time</Checkbox>
-                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled}
-                                 onChange={(value) => setModifiedEventTime(value)}/>
+                    <Checkbox
+                        checked={newRangeDisabled}
+                        onChange={(e) => setNewRangeDisabled(e.target.checked)}
+                    >
+                        Modify Time
+                    </Checkbox>
+                    <RangePicker
+                        {...rangeConfig}
+                        showTime
+                        format="YYYY-MM-DD HH:mm:ss"
+                        disabled={!newRangeDisabled}
+                        onChange={(value) => setModifiedEventTime(value)}
+                    />
                 </Row>
 
                 <Row>
-                    <Checkbox checked={newTitleDisabled} onChange={(e) => {
-                        setNewTitleDisabled(e.target.checked)
-                    }}>Modify Title</Checkbox>
+                    <Checkbox
+                        checked={newTitleDisabled}
+                        onChange={(e) => setNewTitleDisabled(e.target.checked)}
+                    >
+                        Modify Title
+                    </Checkbox>
                     <Input
                         showCount
                         maxLength={20}
                         defaultValue=""
-                        onChange={(e) => {
-                            setModifiedEventTitle(e.target.value)
-                        }}
+                        onChange={(e) => setModifiedEventTitle(e.target.value)}
                         disabled={!newTitleDisabled}
                         placeholder={modifiedEventTitle}
                     />
@@ -219,11 +216,11 @@ const Calendar = ({events, setEvents, tasks, setTasks}) => {
                         // task
                         newEvent.id = `task${event.id}`;
                         newEvent.extendedProps.completed = event.completed;
-                        newEvent.backgroundColor = "#1E90FF";
+                        newEvent.backgroundColor = "#FFE4B5";
                     } else {
                         // event
                         newEvent.id = `event${event.id}`;
-                        newEvent.backgroundColor = "#FFE4B5";
+                        newEvent.backgroundColor = "#1E90FF";
                     }
 
                     return newEvent;
