@@ -4,7 +4,7 @@ const { getAllEvents, createEvent, updateEvent, deleteEvent } = require("../util
 
 // GET /tags read all events
 router.get("/", (req, res) => {
-    const { email } = req.body;
+    const { email } = req.query;
     getAllEvents(email).then((result) => {
         res.send(result.rows);
     }).catch((err) => {

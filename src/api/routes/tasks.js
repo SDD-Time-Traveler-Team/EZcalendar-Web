@@ -4,7 +4,7 @@ const { getAllTasks, createTask, updateTask, deleteTask } = require("../utils/da
 
 // GET /tags read all events
 router.get("/", (req, res) => {
-    const { email } = req.body;
+    const { email } = req.query;
     getAllTasks(email).then((result) => {
         res.send(result.rows);
     }).catch((err) => {
