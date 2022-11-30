@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row } from "antd";
-import { useEffect } from "react";
-import { click } from "@testing-library/user-event/dist/click";
+import {Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row} from "antd";
+import {useEffect} from "react";
+import {click} from "@testing-library/user-event/dist/click";
 //import listPlugin from '@fullcalendar/list';
 
 import moment from 'moment-timezone';
 
 moment.tz.setDefault("America/New_York");
 
-const { RangePicker } = DatePicker;
+const {RangePicker} = DatePicker;
 
 const rangeConfig = {
     rules: [
         {
-        type: 'array',
-        required: true,
-        message: 'Please select time!',
+            type: 'array',
+            required: true,
+            message: 'Please select time!',
         },
     ],
 };
 
-const Calendar = ({ events, setEvents, tasks, setTasks }) => {
+const Calendar = ({events, setEvents, tasks, setTasks, renderCount}) => {
 
     const calendarRef = React.createRef(); // reference to Full Calendar
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
@@ -45,7 +45,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
 
     //TODO: connect to db :)
     //handle updating event and task object outside of the calendar
-    const onEventChange = ({ event, oldEvent, _ }) => {
+    const onEventChange = ({event, oldEvent, _}) => {
 
         //TODO: change in db
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
@@ -88,7 +88,7 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     //handle removing things from 
-    const onEventRemove = ({ event, _ }) => {
+    const onEventRemove = ({event, _}) => {
         //TODO: remove in db
         if (event.extendedProps.hasOwnProperty("completed")) {
             // task
@@ -100,12 +100,11 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     //handle events after clicking on calendar items
-    const onEventClick = async ({ event }) => {
+    const onEventClick = async ({event}) => {
         setIsModalOpen(true);
         setClickItemId(event.id)
         setIsClickedTask(false)
-        if(event.extendedProps.hasOwnProperty("completed"))
-        {
+        if (event.extendedProps.hasOwnProperty("completed")) {
             setIsClickedTask(true)
             setCompleteBoxChecked(event.extendedProps.completed)
         }
@@ -117,18 +116,15 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     //handle modal OK button
     const onModalOk = () => {
         let event = calendarRef.current.getApi().getEventById(clickItemId);
-        if(modifiedEventTitle !== "" && newTitleDisabled === true)
-        {
+        if (modifiedEventTitle !== "" && newTitleDisabled === true) {
             event.setProp("title", modifiedEventTitle)
         }
-        if(newRangeDisabled === true)
-        {
+        if (newRangeDisabled === true) {
             event.setStart(modifiedEventTime[0].format("YYYY-MM-DDTHH:mm:ss"))
             event.setEnd(modifiedEventTime[1].format("YYYY-MM-DDTHH:mm:ss"))
         }
         event.setExtendedProp("completed", completeBoxChecked)
-        if(event.extendedProps.completed === true)
-        {
+        if (event.extendedProps.completed === true) {
             event.setProp("backgroundColor", "red")
             console.log(event.backgroundColor)
         }
@@ -147,94 +143,105 @@ const Calendar = ({ events, setEvents, tasks, setTasks }) => {
     };
 
     //components in calendar
-    return (
-        <>
-            <Modal
-                title="Modify or Delete"
-                open={isModalOpen}
-                //onOk={onModalOk}
-                onOk={onModalOk}
-                onCancel={onModalCancel}
-            >
+    if (renderCount > 0) {
+        return (
+            <>
+                <Modal
+                    title="Modify or Delete"
+                    open={isModalOpen}
+                    //onOk={onModalOk}
+                    onOk={onModalOk}
+                    onCancel={onModalCancel}
+                >
 
-                {false ? (
-                    <Divider>
-                        {/* Must include this divider. Do not delete it! */}
-                        {clickItemId}
-                    </Divider>
-                ) : (
-                    <></>
-                )}
-                <Row justify="center">
-                    {isClickedTask ? (
-                        <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
-                            Complete
-                        </Checkbox>
+                    {false ? (
+                        <Divider>
+                            {/* Must include this divider. Do not delete it! */}
+                            {clickItemId}
+                        </Divider>
                     ) : (
                         <></>
                     )}
-                    <Button type="primary" danger size="large" onClick={onDeleteEvent}>
-                        Delete
-                    </Button>
-                </Row>
-                
+                    <Row justify="center">
+                        {isClickedTask ? (
+                            <Checkbox defaultChecked={false} onChange={(e) => setCompleteBoxChecked(e.target.checked)}>
+                                Complete
+                            </Checkbox>
+                        ) : (
+                            <></>
+                        )}
+                        <Button type="primary" danger size="large" onClick={onDeleteEvent}>
+                            Delete
+                        </Button>
+                    </Row>
 
-                <Row>
-                    <Checkbox checked={newRangeDisabled} onChange={(e) => {setNewRangeDisabled(e.target.checked)}}>Modify Time</Checkbox>
-                    <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled} onChange={(value) => {setModifiedEventTime(value);}}/>
-                </Row>
-                
-                <Row>
-                    <Checkbox checked={newTitleDisabled} onChange={(e) => {setNewTitleDisabled(e.target.checked)}}>Modify Title</Checkbox>
-                    <Input 
-                        showCount 
-                        maxLength={20}
-                        defaultValue=""
-                        onChange={(e) => {setModifiedEventTitle(e.target.value)}}
-                        disabled={!newTitleDisabled}
-                        placeholder={modifiedEventTitle}
-                    />
-                </Row>
-            </Modal>
-            <FullCalendar
-                ref={calendarRef}
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                headerToolbar={{
-                    center: "dayGridMonth,timeGridWeek,timeGridDay",
-                }}
-                editable
-                timeZone='EST'
-                events={events.concat(tasks).map((event) => {
-                    const newEvent = {
-                        title: event.title,
-                        start: event.start,
-                        end: event.end,
-                        textColor: "#2F4F4F",
-                        extendedProps: {
-                            tagId: event.tagId,
-                        },
-                    };
 
-                    if (event.hasOwnProperty("completed")) {
-                        // task
-                        newEvent.id = `task${event.id}`;
-                        newEvent.extendedProps.completed = event.completed;
-                        newEvent.backgroundColor = "#1E90FF";
-                    } else {
-                        // event
-                        newEvent.id = `event${event.id}`;
-                        newEvent.backgroundColor = "#FFE4B5";
-                    }
+                    <Row>
+                        <Checkbox checked={newRangeDisabled} onChange={(e) => {
+                            setNewRangeDisabled(e.target.checked)
+                        }}>Modify Time</Checkbox>
+                        <RangePicker {...rangeConfig} showTime format="YYYY-MM-DD HH:mm:ss" disabled={!newRangeDisabled}
+                                     onChange={(value) => {
+                                         setModifiedEventTime(value);
+                                     }}/>
+                    </Row>
 
-                    return newEvent;
-                })}
-                eventChange={onEventChange}
-                eventRemove={onEventRemove}
-                eventClick={onEventClick}
-            />
-        </>
-    );
+                    <Row>
+                        <Checkbox checked={newTitleDisabled} onChange={(e) => {
+                            setNewTitleDisabled(e.target.checked)
+                        }}>Modify Title</Checkbox>
+                        <Input
+                            showCount
+                            maxLength={20}
+                            defaultValue=""
+                            onChange={(e) => {
+                                setModifiedEventTitle(e.target.value)
+                            }}
+                            disabled={!newTitleDisabled}
+                            placeholder={modifiedEventTitle}
+                        />
+                    </Row>
+                </Modal>
+                <FullCalendar
+                    ref={calendarRef}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
+                    headerToolbar={{
+                        center: "dayGridMonth,timeGridWeek,timeGridDay",
+                    }}
+                    editable
+                    timeZone='EST'
+                    events={events.concat(tasks).map((event) => {
+                        const newEvent = {
+                            title: event.title,
+                            start: event.start,
+                            end: event.end,
+                            textColor: "#2F4F4F",
+                            extendedProps: {
+                                tagId: event.tagId,
+                            },
+                        };
+
+                        if (event.hasOwnProperty("completed")) {
+                            // task
+                            newEvent.id = `task${event.id}`;
+                            newEvent.extendedProps.completed = event.completed;
+                            newEvent.backgroundColor = "#1E90FF";
+                        } else {
+                            // event
+                            newEvent.id = `event${event.id}`;
+                            newEvent.backgroundColor = "#FFE4B5";
+                        }
+
+                        return newEvent;
+                    })}
+                    eventChange={onEventChange}
+                    eventRemove={onEventRemove}
+                    eventClick={onEventClick}
+                />
+            </>
+        );
+    }
 };
 
 export default Calendar;

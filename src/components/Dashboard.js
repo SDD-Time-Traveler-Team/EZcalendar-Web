@@ -12,6 +12,7 @@ const Dashboard = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [events, setEvents] = useState([]); // events {id, title, tagId, startTime, endTime}
     const [tasks, setTasks] = useState([]); // tasks {id, title, tagId, startTime, endTime, completed}
+    const [renderCount, setRenderCount] = useState(1); // this is used to force-rerender Calendar
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,26 +26,30 @@ const Dashboard = () => {
         }
 
         getAllEvents(auth.email).then((res) => {
-            setEvents((prev) => res.data.map((event) => ({
+            let newEvents = res.data.map((event) => ({
                 id: event.id,
                 title: event.title,
                 tagId: event.tag_id,
-                startTime:event.start_time,
+                startTime: event.start_time,
                 endTime: event.end_time
-            })))
+            }))
+            setEvents(newEvents)
+            setRenderCount(renderCount + 1)
         }).catch((err) => {
             console.log(err)
         })
 
         getAllTasks(auth.email).then((res) => {
-            setTasks((prev) => res.data.map((task) => ({
+            let newTasks = res.data.map((task) => ({
                 id: task.id,
                 title: task.title,
                 tagId: task.tag_id,
-                startTime:task.start_time,
+                startTime: task.start_time,
                 endTime: task.end_time,
                 completed: task.completed
-            })))
+            }))
+            setTasks(newTasks)
+            setRenderCount(renderCount + 1)
         }).catch((err) => {
             console.log(err)
         })
@@ -65,6 +70,7 @@ const Dashboard = () => {
                         setEvents={setEvents}
                         tasks={tasks}
                         setTasks={setTasks}
+                        renderCount={renderCount}
                     />
                 </Col>
             </Row>
