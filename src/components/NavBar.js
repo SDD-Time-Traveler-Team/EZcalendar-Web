@@ -5,7 +5,7 @@ import logo from "../assets/EZlogo.jpg";
 import Authentication from "../utils/Authentication";
 import {useNavigate} from "react-router-dom";
 
-export default function NavBar({setLoginStatus}) {
+export default function NavBar() {
     const [auth] = useState(new Authentication());
     const navigate = useNavigate();
 
@@ -18,7 +18,6 @@ export default function NavBar({setLoginStatus}) {
         }).catch((err) => {
             console.log(`sign out fail ${err}`);
         });
-        setLoginStatus(false);
     }
 
     //menu component

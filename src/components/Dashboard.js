@@ -10,7 +10,6 @@ import {getESTISOString} from "../utils/TimeParser";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
-    const [loggedIn, setLoggedIn] = useState(true);
     const [events, setEvents] = useState([]); // events {id, title, tagId, startTime, endTime}
     const [tasks, setTasks] = useState([]); // tasks {id, title, tagId, startTime, endTime, completed}
     const [renderCount, setRenderCount] = useState(1); // this is used to force-rerender Calendar
@@ -25,7 +24,6 @@ const Dashboard = () => {
             // catching an error means not logged in
             navigate("/login");
         }).then(() => {
-            setLoggedIn(!!auth.user);
             fetchAllEventsAndTasks()
         })
     }, [auth.email]);
@@ -64,7 +62,7 @@ const Dashboard = () => {
     //dashboard components
     return (
         <>
-            <NavBar setLoginStatus={setLoggedIn}/>
+            <NavBar/>
             <Row>
                 <Col span={5}>
                     <TagMenu setEvents={setEvents} setTasks={setTasks} fetchAllEventsAndTasks={fetchAllEventsAndTasks}/>
