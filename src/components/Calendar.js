@@ -3,12 +3,10 @@ import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {Button, Checkbox, DatePicker, Form, Input, Modal, TimePicker, Divider, Col, Row} from "antd";
-import {useEffect} from "react";
-import {click} from "@testing-library/user-event/dist/click";
-//import listPlugin from '@fullcalendar/list';
-
+import {Button, Checkbox, DatePicker, Input, Modal, Divider, Row} from "antd";
 import moment from 'moment-timezone';
+import {updateEvent, updateTask} from "../utils/Database";
+import Authentication from "../utils/Authentication";
 
 moment.tz.setDefault("America/New_York");
 
@@ -24,10 +22,11 @@ const rangeConfig = {
     ],
 };
 
-const Calendar = ({events, setEvents, tasks, setTasks, renderCount}) => {
+const Calendar = ({events, setEvents, tasks, setTasks, renderCount, fetchAllEventsAndTasks}) => {
 
     const calendarRef = React.createRef(); // reference to Full Calendar
 
+    const [auth] = useState(new Authentication());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isClickedTask, setIsClickedTask] = useState(false);
     const [completeBoxChecked, setCompleteBoxChecked] = useState(false);
@@ -37,54 +36,64 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount}) => {
 
     const [newTitleDisabled, setNewTitleDisabled] = useState(true);
     const [newRangeDisabled, setNewRangeDisabled] = useState(true);
-    //var clickedEventId = "default placeholder";
-
-    // useEffect(() => {
-    //     clickedEventId = clickItemId
-    // }, [clickItemId])
 
     //TODO: connect to db :)
     //handle updating event and task object outside of the calendar
-    const onEventChange = ({event, oldEvent, _}) => {
+    const onEventChange = ({event, oldEvent, revert}) => {
+        if (oldEvent.extendedProps.hasOwnProperty("completed")) {
+            updateTask(event.id.slice(4), auth.email, event.title, event.extendedProps.tagId, "", event.start, event.end, event.extendedProps.completed).then(() => {
+                fetchAllEventsAndTasks()
+            }).catch((err) => {
+                console.log(err)
+                revert()
+            })
+        } else {
+            updateEvent(event.id.slice(5), auth.email, event.title, event.extendedProps.tagId, "", event.start, event.end).then(() => {
+                fetchAllEventsAndTasks()
+            }).catch((err) => {
+                console.log(err)
+                revert()
+            })
+        }
 
         //TODO: change in db
-        if (oldEvent.extendedProps.hasOwnProperty("completed")) {
-            // task
-            setTasks((prev) =>
-                prev.map((task) => {
-                    //  task {id, title, tagId, start, end, completed}
-                    if ("task" + task.id === oldEvent.id) {
-                        return {
-                            id: task.id,
-                            title: event.title,
-                            start: event.start,
-                            end: event.end,
-                            tagId: event.extendedProps.tagId,
-                            completed: event.extendedProps.completed,
-                        };
-                    } else {
-                        return task;
-                    }
-                })
-            );
-        } else {
-            // event
-            setEvents((prev) =>
-                prev.map((item) => {
-                    if ("event" + item.id === oldEvent.id) {
-                        return {
-                            id: item.id,
-                            title: event.title,
-                            start: event.start,
-                            end: event.end,
-                            tagId: event.extendedProps.tagId,
-                        };
-                    } else {
-                        return item;
-                    }
-                })
-            );
-        }
+//        if (oldEvent.extendedProps.hasOwnProperty("completed")) {
+//            // task
+//            setTasks((prev) =>
+//                prev.map((task) => {
+//                    //  task {id, title, tagId, start, end, completed}
+//                    if ("task" + task.id === oldEvent.id) {
+//                        return {
+//                            id: task.id,
+//                            title: event.title,
+//                            start: event.start,
+//                            end: event.end,
+//                            tagId: event.extendedProps.tagId,
+//                            completed: event.extendedProps.completed,
+//                        };
+//                    } else {
+//                        return task;
+//                    }
+//                })
+//            );
+//        } else {
+//            // event
+//            setEvents((prev) =>
+//                prev.map((item) => {
+//                    if ("event" + item.id === oldEvent.id) {
+//                        return {
+//                            id: item.id,
+//                            title: event.title,
+//                            start: event.start,
+//                            end: event.end,
+//                            tagId: event.extendedProps.tagId,
+//                        };
+//                    } else {
+//                        return item;
+//                    }
+//                })
+//            );
+//        }
     };
 
     //handle removing things from 

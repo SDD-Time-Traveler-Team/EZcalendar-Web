@@ -26,6 +26,11 @@ const Dashboard = () => {
             console.log(auth.user);
         }
 
+        fetchAllEventsAndTasks()
+
+    }, [auth.email, auth.user, loggedIn, navigate]);
+
+    const fetchAllEventsAndTasks = () => {
         getAllEvents(auth.email).then((res) => {
             let newEvents = res.data.map((event) => ({
                 id: event.id,
@@ -54,8 +59,7 @@ const Dashboard = () => {
         }).catch((err) => {
             console.log(err)
         })
-
-    }, [auth.email, auth.user, loggedIn, navigate]);
+    }
 
     //dashboard components
     return (
@@ -72,6 +76,7 @@ const Dashboard = () => {
                         tasks={tasks}
                         setTasks={setTasks}
                         renderCount={renderCount}
+                        fetchAllEventsAndTasks={fetchAllEventsAndTasks}
                     />
                 </Col>
             </Row>

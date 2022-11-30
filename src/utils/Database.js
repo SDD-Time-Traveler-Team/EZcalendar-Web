@@ -83,6 +83,25 @@ export const createEvent = async (email, title, tagId, description = "", startTi
     });
 }
 
+export const updateEvent = async (eventId, email, title, tagId, description = "", startTime, endTime) => {
+    return axios({
+        method: 'post',
+        url: 'http://localhost:4000/events',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "event_id": eventId,
+            "email": email,
+            "title": title,
+            "tag_id": tagId,
+            "description": description,
+            "start_time": startTime,
+            "end_time": endTime
+        })
+    })
+}
+
 export const getAllTasks = async (email) => {
     return axios({
         method: 'get',
@@ -110,4 +129,24 @@ export const createTask = async (email, title, tagId, description = "", startTim
             "completed": completed
         })
     });
+}
+
+export const updateTask = async (taskId, email, title, tagId, description = "", startTime, endTime, completed) => {
+    return axios({
+        method: 'post',
+        url: 'http://localhost:4000/tasks',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "task_id": taskId,
+            "email": email,
+            "title": title,
+            "tag_id": tagId,
+            "description": description,
+            "start_time": startTime,
+            "end_time": endTime,
+            "completed": completed
+        })
+    })
 }
