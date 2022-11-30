@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, List } from "antd";
+import React, {useEffect, useState} from "react";
+import {Row, Col, List} from "antd";
 import TagCreate from "./TagCreate";
 import Tag from "./Tag";
 import Authentication from "../utils/Authentication";
-import { getAllTags, createTag, updateTag, deleteTag } from "../utils/Database";
+import {getAllTags, createTag, updateTag, deleteTag, createEvent, createTask} from "../utils/Database";
 import VirtualList from "rc-virtual-list";
 
-const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
+const TagMenu = ({setEvents, setTasks, fetchAllEventsAndTasks}) => {
     const auth = new Authentication();
     const [tags, setTags] = useState([]); // tag: {id, title, duration}
 
-
+    //fetch user's tags from server upon entering calendar page
     useEffect(() => {
         getAllTags(auth.email)
             .then((res) => {
@@ -25,8 +25,9 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+    }, [auth.email]);
 
+    //handle creating tag in the tag section
     const onCreateTag = (tagTitle, tagDuration) => {
         const durationInMinutes = toMinutes(tagDuration);
 
@@ -46,8 +47,10 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             });
     };
 
+    //handle editing tag in the tag section
     const onEditTag = (id, title, durationInHoursAndMinutes) => {
         const durationInMinutes = toMinutes(durationInHoursAndMinutes);
+
         updateTag(auth.email, id, title, durationInMinutes)
             .then((res) => {
                 setTags((prev) =>
@@ -69,6 +72,7 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             });
     };
 
+    //handle deleting tag in the tag section
     const onDeleteTag = (id) => {
         deleteTag(auth.email, id)
             .then((res) => {
@@ -79,51 +83,32 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             });
     };
 
-    // const putTaginCalendar = (eventTasksTitle, eventTasksStart, eventTasksEnd) => {
-    //     setEventtasks(current => [...current,
-    //         {
-    //             title: eventTasksTitle,
-    //             start: eventTasksStart,
-    //             end: eventTasksEnd
-    //         }
-    //     ]);
-    // }
-
+    //handle adding tags to the calendar from tag section
     const onAddToCalendar = (tag_id, title, startTime, endTime, isEvent) => {
-        //TODO:
-        const id = (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"")
+        //TODO: connect db
+
         // events {id, title, tagId, startTime, endTime}
         // tasks {id, title, tagId, startTime, endTime, completed}
-        // console.log(isEvent)
-        if(isEvent){
-            setEvents((prev) => [
-                ...prev,
-                {
-                    id: id,
-                    tagId: tag_id,
-                    title: title,
-                    start: startTime,
-                    end: endTime
-                },
-            ]);
+
+        if (isEvent) {
+            createEvent(auth.email, title, tag_id, "", startTime, endTime)
+                .then((res) => {
+                    fetchAllEventsAndTasks()
+                }).catch((err) => {
+                console.log(err);
+            })
+
+        } else {
+            createTask(auth.email, title, tag_id, "", startTime, endTime, false)
+                .then((res) => {
+                    fetchAllEventsAndTasks()
+                }).catch((err) => {
+                    console.log(err)
+            })
         }
-        else{
-            setTasks((prev) => [
-                ...prev,
-                {
-                    id: id,
-                    tagId: tag_id,
-                    title: title,
-                    start: startTime,
-                    end: endTime,
-                    completed: false
-                },
-            ]);
-        }
-        // console.log(events)
-        // console.log(tasks)
     };
 
+    //convert minutes to hours and minutes
     const toHoursAndMinutes = (totalMinutes) => {
         const hours = Math.floor(totalMinutes / 60);
         const hoursStr = hours < 10 ? `0${hours}` : hours.toString();
@@ -132,6 +117,7 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
         return hoursStr + ":" + minutesStr;
     };
 
+    //convert hours and minutes to minutes
     const toMinutes = (hoursAndMinutes) => {
         const splitDuration = hoursAndMinutes.split(":");
         const durationInMinutes = parseInt(splitDuration[0]) * 60 + parseInt(splitDuration[1]);
@@ -143,21 +129,17 @@ const TagMenu = ({ events, tasks, setEvents, setTasks }) => {
             <Col span={24}>
                 <Row justify="center">
                     <Col>
-                        <TagCreate CreateTag={onCreateTag} />
+                        <TagCreate CreateTag={onCreateTag}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <List
-                            bordered="false"
-                            //style={{height:"100vh"}}
-                        >
+                        <List bordered="false">
                             <VirtualList
                                 data={Object.entries(tags)}
                                 height={750}
                                 itemHeight={47}
                                 itemKey="index"
-                                //onScroll={onScroll}
                             >
                                 {(item) => (
                                     <List.Item>
