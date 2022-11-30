@@ -41,6 +41,10 @@ class Authentication {
     async signOut() {
         return Auth.signOut();
     }
+
+    async retrieveAuthenticatedUser() {
+        return Auth.currentAuthenticatedUser()
+    }
 }
 
 export default Authentication;

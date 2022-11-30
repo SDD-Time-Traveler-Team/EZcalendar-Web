@@ -17,21 +17,26 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setLoggedIn(!!auth.user);
-
-        // if signed out, redirect to /login
-        if (!loggedIn) {
+        // retrieve authenticated user if logged in
+        auth.retrieveAuthenticatedUser().then((user) => {
+            auth.user = user
+            auth.email = user.attributes.email
+        }).catch((err) => {
+            // catching an error means not logged in
             navigate("/login");
             console.log("not logged in, redirect to /login");
             console.log(auth.user);
-        }
+        }).then(() => {
+            setLoggedIn(!!auth.user);
 
-        fetchAllEventsAndTasks()
+            fetchAllEventsAndTasks()
+        })
 
-    }, [auth.email, auth.user, loggedIn, navigate]);
+    }, []);
 
     const fetchAllEventsAndTasks = () => {
         getAllEvents(auth.email).then((res) => {
+            console.log(res)
             let newEvents = res.data.map((event) => ({
                 id: event.id,
                 title: event.title,
@@ -67,7 +72,7 @@ const Dashboard = () => {
             <NavBar setLoginStatus={setLoggedIn}/>
             <Row>
                 <Col span={5}>
-                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks}/>
+                    <TagMenu setEvents={setEvents} setTasks={setTasks} fetchAllEventsAndTasks={fetchAllEventsAndTasks}/>
                 </Col>
                 <Col span={19}>
                     <Calendar
