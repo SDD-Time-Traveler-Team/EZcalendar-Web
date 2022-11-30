@@ -6,6 +6,7 @@ import NavBar from "./NavBar";
 import TagMenu from "./TagMenu";
 import Authentication from "../utils/Authentication";
 import {getAllEvents, getAllTasks} from "../utils/Database";
+import {getESTISOString} from "../utils/TimeParser";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
@@ -30,8 +31,8 @@ const Dashboard = () => {
                 id: event.id,
                 title: event.title,
                 tagId: event.tag_id,
-                startTime: event.start_time,
-                endTime: event.end_time
+                startTime: getESTISOString(event.start_time),
+                endTime: getESTISOString(event.end_time)
             }))
             setEvents(newEvents)
             setRenderCount(renderCount + 1)
@@ -44,8 +45,8 @@ const Dashboard = () => {
                 id: task.id,
                 title: task.title,
                 tagId: task.tag_id,
-                startTime: task.start_time,
-                endTime: task.end_time,
+                startTime: getESTISOString(task.start_time),
+                endTime: getESTISOString(task.end_time),
                 completed: task.completed
             }))
             setTasks(newTasks)

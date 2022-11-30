@@ -149,7 +149,6 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount}) => {
                 <Modal
                     title="Modify or Delete"
                     open={isModalOpen}
-                    //onOk={onModalOk}
                     onOk={onModalOk}
                     onCancel={onModalCancel}
                 >
@@ -214,8 +213,8 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount}) => {
                     events={events.concat(tasks).map((event) => {
                         const newEvent = {
                             title: event.title,
-                            start: event.start,
-                            end: event.end,
+                            start: event.startTime,
+                            end: event.endTime,
                             textColor: "#2F4F4F",
                             extendedProps: {
                                 tagId: event.tagId,
