@@ -24,19 +24,14 @@ const Dashboard = () => {
         }).catch((err) => {
             // catching an error means not logged in
             navigate("/login");
-            console.log("not logged in, redirect to /login");
-            console.log(auth.user);
         }).then(() => {
             setLoggedIn(!!auth.user);
-
             fetchAllEventsAndTasks()
         })
-
-    }, []);
+    }, [auth.email]);
 
     const fetchAllEventsAndTasks = () => {
         getAllEvents(auth.email).then((res) => {
-            console.log(res)
             let newEvents = res.data.map((event) => ({
                 id: event.id,
                 title: event.title,
