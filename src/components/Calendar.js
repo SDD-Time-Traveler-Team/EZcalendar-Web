@@ -5,7 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import {Button, Checkbox, DatePicker, Input, Modal, Divider, Row} from "antd";
 import moment from 'moment-timezone';
-import {updateEvent, updateTask} from "../utils/Database";
+import {deleteEvent, deleteTask, updateEvent, updateTask} from "../utils/Database";
 import Authentication from "../utils/Authentication";
 
 moment.tz.setDefault("America/New_York");
@@ -37,10 +37,10 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount, fetchAllEven
     const [newTitleDisabled, setNewTitleDisabled] = useState(true);
     const [newRangeDisabled, setNewRangeDisabled] = useState(true);
 
-    //TODO: connect to db :)
     //handle updating event and task object outside of the calendar
     const onEventChange = ({event, oldEvent, revert}) => {
         if (oldEvent.extendedProps.hasOwnProperty("completed")) {
+            // task
             updateTask(event.id.slice(4), auth.email, event.title, event.extendedProps.tagId, "", event.start, event.end, event.extendedProps.completed).then(() => {
                 fetchAllEventsAndTasks()
             }).catch((err) => {
@@ -48,6 +48,7 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount, fetchAllEven
                 revert()
             })
         } else {
+            // event
             updateEvent(event.id.slice(5), auth.email, event.title, event.extendedProps.tagId, "", event.start, event.end).then(() => {
                 fetchAllEventsAndTasks()
             }).catch((err) => {
@@ -55,56 +56,26 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount, fetchAllEven
                 revert()
             })
         }
-
-        //TODO: change in db
-//        if (oldEvent.extendedProps.hasOwnProperty("completed")) {
-//            // task
-//            setTasks((prev) =>
-//                prev.map((task) => {
-//                    //  task {id, title, tagId, start, end, completed}
-//                    if ("task" + task.id === oldEvent.id) {
-//                        return {
-//                            id: task.id,
-//                            title: event.title,
-//                            start: event.start,
-//                            end: event.end,
-//                            tagId: event.extendedProps.tagId,
-//                            completed: event.extendedProps.completed,
-//                        };
-//                    } else {
-//                        return task;
-//                    }
-//                })
-//            );
-//        } else {
-//            // event
-//            setEvents((prev) =>
-//                prev.map((item) => {
-//                    if ("event" + item.id === oldEvent.id) {
-//                        return {
-//                            id: item.id,
-//                            title: event.title,
-//                            start: event.start,
-//                            end: event.end,
-//                            tagId: event.extendedProps.tagId,
-//                        };
-//                    } else {
-//                        return item;
-//                    }
-//                })
-//            );
-//        }
     };
 
     //handle removing things from 
-    const onEventRemove = ({event, _}) => {
-        //TODO: remove in db
+    const onEventRemove = ({event, revert}) => {
         if (event.extendedProps.hasOwnProperty("completed")) {
             // task
-            setTasks((prev) => prev.filter((task) => "task" + task.id !== event.id));
+            deleteTask(auth.email, event.id.slice(4)).then(() => {
+                fetchAllEventsAndTasks()
+            }).catch((err) => {
+                console.log(err)
+                revert()
+            })
         } else {
             // event
-            setEvents((prev) => prev.filter((item) => "event" + item.id !== event.id));
+            deleteEvent(auth.email, event.id.slice(5)).then(() => {
+                fetchAllEventsAndTasks()
+            }).catch((err) => {
+                console.log(err)
+                revert()
+            })
         }
     };
 
@@ -151,7 +122,6 @@ const Calendar = ({events, setEvents, tasks, setTasks, renderCount, fetchAllEven
         setIsModalOpen(false)
     };
 
-    //components in calendar
     if (renderCount > 0) {
         return (
             <>

@@ -102,6 +102,20 @@ export const updateEvent = async (eventId, email, title, tagId, description = ""
     })
 }
 
+export const deleteEvent = async (email, eventId) => {
+    return axios({
+        method: 'delete',
+        url: 'http://localhost:4000/events',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "email": email,
+            "event_id": eventId
+        })
+    })
+}
+
 export const getAllTasks = async (email) => {
     return axios({
         method: 'get',
@@ -147,6 +161,20 @@ export const updateTask = async (taskId, email, title, tagId, description = "", 
             "start_time": startTime,
             "end_time": endTime,
             "completed": completed
+        })
+    })
+}
+
+export const deleteTask = async (email, taskId) => {
+    return axios({
+        method: 'delete',
+        url: 'http://localhost:4000/tasks',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "email": email,
+            "task_id": taskId
         })
     })
 }
