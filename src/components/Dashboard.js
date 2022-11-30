@@ -10,25 +10,23 @@ import {getESTISOString} from "../utils/TimeParser";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
-    const [loggedIn, setLoggedIn] = useState(true);
     const [events, setEvents] = useState([]); // events {id, title, tagId, startTime, endTime}
     const [tasks, setTasks] = useState([]); // tasks {id, title, tagId, startTime, endTime, completed}
     const [renderCount, setRenderCount] = useState(1); // this is used to force-rerender Calendar
     const navigate = useNavigate();
 
     useEffect(() => {
-        setLoggedIn(!!auth.user);
-
-        // if signed out, redirect to /login
-        if (!loggedIn) {
+        // retrieve authenticated user if logged in
+        auth.retrieveAuthenticatedUser().then((user) => {
+            auth.user = user
+            auth.email = user.attributes.email
+        }).catch((err) => {
+            // catching an error means not logged in
             navigate("/login");
-            console.log("not logged in, redirect to /login");
-            console.log(auth.user);
-        }
-
-        fetchAllEventsAndTasks()
-
-    }, [auth.email, auth.user, loggedIn, navigate]);
+        }).then(() => {
+            fetchAllEventsAndTasks()
+        })
+    }, [auth.email]);
 
     const fetchAllEventsAndTasks = () => {
         getAllEvents(auth.email).then((res) => {
@@ -64,10 +62,10 @@ const Dashboard = () => {
     //dashboard components
     return (
         <>
-            <NavBar setLoginStatus={setLoggedIn}/>
+            <NavBar/>
             <Row>
                 <Col span={5}>
-                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks}/>
+                    <TagMenu setEvents={setEvents} setTasks={setTasks} fetchAllEventsAndTasks={fetchAllEventsAndTasks}/>
                 </Col>
                 <Col span={19}>
                     <Calendar

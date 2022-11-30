@@ -11,7 +11,6 @@ class Authentication {
             return Authentication._instance;
         }
         Authentication._instance = this;
-        console.log(this);
 
         Amplify.configure(awsconfig);
         this.user = null;
@@ -40,6 +39,10 @@ class Authentication {
 
     async signOut() {
         return Auth.signOut();
+    }
+
+    async retrieveAuthenticatedUser() {
+        return Auth.currentAuthenticatedUser()
     }
 }
 
