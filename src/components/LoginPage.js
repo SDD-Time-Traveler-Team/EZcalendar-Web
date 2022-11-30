@@ -8,6 +8,7 @@ const LoginPage = () => {
     const [alertOpen, setAlertOpen] = useState(false);
     const navigate = useNavigate();
 
+    //send request to server upon login and validate user credential
     const onLogin = (values) => {
         auth.signIn(values.email, values.password).then((user) => {
             auth.user = user;
@@ -15,17 +16,18 @@ const LoginPage = () => {
             setAlertOpen(false);
             console.log('sign in success');
             navigate("/dashboard");
-
         }).catch((err) => {
             console.log('sign in fail:', err);
             setAlertOpen(true);
         });
     };
 
+    //log server error message
     const onLoginFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
+    //log alert close message
     const onClose = (e) => {
         console.log(e, 'I was closed.');
         setAlertOpen(false);
@@ -114,7 +116,6 @@ const LoginPage = () => {
                     </Button> Or <a href="/signup">register now!</a>
                 </Form.Item>
             </Form>
-
         </Row>
     );
 };

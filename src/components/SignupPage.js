@@ -1,10 +1,8 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Button, Form, Input, Modal, Row, InputNumber, Alert} from 'antd';
+import {Button, Form, Input, Modal, Row, Alert} from 'antd';
 import Authentication from "../utils/Authentication";
 
-
-const {TextArea} = Input;
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -43,12 +41,12 @@ const SignupPage = () => {
     const [alertOpen, setAlertOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const navigate = useNavigate();
-
+    //handle hiding confirmation code modal
     const hideModal = () => {
         setConfirmModalOpen(false);
     };
 
-
+    //send request to server when signing up
     const onSignUp = (values) => {
         console.log('Received values of form: ', values.email);
         auth.signUp(values.email, values.password).then((user) => {
@@ -59,6 +57,7 @@ const SignupPage = () => {
         });
     };
 
+    //send request to server to confirm sign up
     const onConfirmSignUp = () => {
         auth.confirmSignUp(userEmail, code).then(() => {
             console.log("confirmation succeed");
@@ -68,7 +67,6 @@ const SignupPage = () => {
             setAlertOpen(true);
         });
     };
-
 
     const onClose = (e) => {
         console.log(e, 'I was closed.');

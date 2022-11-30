@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Row, Col } from "antd";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Row, Col} from "antd";
 import Calendar from "./Calendar";
 import NavBar from "./NavBar";
 import TagMenu from "./TagMenu";
 import Authentication from "../utils/Authentication";
+import {getAllEvents, getAllTasks} from "../utils/Database";
+import {getESTISOString} from "../utils/TimeParser";
 
 const Dashboard = () => {
     const [auth] = useState(new Authentication());
     const [loggedIn, setLoggedIn] = useState(true);
     const [events, setEvents] = useState([]); // events {id, title, tagId, startTime, endTime}
     const [tasks, setTasks] = useState([]); // tasks {id, title, tagId, startTime, endTime, completed}
+    const [renderCount, setRenderCount] = useState(1); // this is used to force-rerender Calendar
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,14 +25,49 @@ const Dashboard = () => {
             console.log("not logged in, redirect to /login");
             console.log(auth.user);
         }
-    }, [auth.user, loggedIn, navigate]);
 
+        fetchAllEventsAndTasks()
+
+    }, [auth.email, auth.user, loggedIn, navigate]);
+
+    const fetchAllEventsAndTasks = () => {
+        getAllEvents(auth.email).then((res) => {
+            let newEvents = res.data.map((event) => ({
+                id: event.id,
+                title: event.title,
+                tagId: event.tag_id,
+                startTime: getESTISOString(event.start_time),
+                endTime: getESTISOString(event.end_time)
+            }))
+            setEvents(newEvents)
+            setRenderCount(renderCount + 1)
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        getAllTasks(auth.email).then((res) => {
+            let newTasks = res.data.map((task) => ({
+                id: task.id,
+                title: task.title,
+                tagId: task.tag_id,
+                startTime: getESTISOString(task.start_time),
+                endTime: getESTISOString(task.end_time),
+                completed: task.completed
+            }))
+            setTasks(newTasks)
+            setRenderCount(renderCount + 1)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    //dashboard components
     return (
         <>
-            <NavBar setLoginStatus={setLoggedIn} />
+            <NavBar setLoginStatus={setLoggedIn}/>
             <Row>
                 <Col span={5}>
-                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks} />
+                    <TagMenu events={events} tasks={tasks} setEvents={setEvents} setTasks={setTasks}/>
                 </Col>
                 <Col span={19}>
                     <Calendar
@@ -37,6 +75,8 @@ const Dashboard = () => {
                         setEvents={setEvents}
                         tasks={tasks}
                         setTasks={setTasks}
+                        renderCount={renderCount}
+                        fetchAllEventsAndTasks={fetchAllEventsAndTasks}
                     />
                 </Col>
             </Row>

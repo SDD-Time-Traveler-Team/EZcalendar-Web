@@ -13,7 +13,7 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
             },
         ],
     };
-
+    
     const onFinish = (fieldsValue) => {
         const values = {
             ...fieldsValue,
@@ -21,7 +21,6 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
         };
         setEditModalOpen(false);
         onEdit(id, values.title, values["time-picker"]);
-        //console.log('Received values of form: ', values);
     };
 
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -44,24 +43,23 @@ const Tag = ({ title, duration, id, onDelete, onEdit, onAddToCalendar }) => {
             ...fieldsValue,
             "date-time-picker": fieldsValue["date-time-picker"].format("YYYY-MM-DD HH:mm:ss"),
         };
-        //console.log(values['date-time-picker'])
 
-        var time_arr = duration.split(":");
-        var hours = parseInt(time_arr[0]);
-        var minutes = parseInt(time_arr[1]);
-        var date1 = new Date(values["date-time-picker"]);
+        let time_arr = duration.split(":");
+        let hours = parseInt(time_arr[0]);
+        let minutes = parseInt(time_arr[1]);
+        let date1 = new Date(values["date-time-picker"]);
 
         date1.setHours(date1.getHours() + hours);
         date1.setMinutes(date1.getMinutes() + minutes);
 
-        var mm = date1.getMonth() + 1;
-        var dd = date1.getDate();
-        var dateStr = [
+        let mm = date1.getMonth() + 1;
+        let dd = date1.getDate();
+        let dateStr = [
             date1.getFullYear(),
             (mm > 9 ? "" : "0") + mm,
             (dd > 9 ? "" : "0") + dd,
         ].join("-");
-        var timeStr = date1.toString().split(" ")[4];
+        let timeStr = date1.toString().split(" ")[4];
 
         onAddToCalendar(
             id,
