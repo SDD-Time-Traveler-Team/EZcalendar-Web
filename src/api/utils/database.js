@@ -85,7 +85,7 @@ async function createTask(email, title, tag_id, description, start_time, end_tim
 }
 
 async function updateTask(
-    tasks_id,
+    task_id,
     email,
     title,
     tag_id,
@@ -96,12 +96,12 @@ async function updateTask(
 ) {
     const text =
         "UPDATE tasks SET title = $3,tag_id = $4,description = $5,start_time=$6,end_time=$7,completed=$8 WHERE email = $2 AND id = $1;";
-    const values = [tasks_id, email, title, tag_id, description, start_time, end_time, completed];
+    const values = [task_id, email, title, tag_id, description, start_time, end_time, completed];
     return client.query(text, values);
 }
-async function deleteTask(tasks_id, email) {
+async function deleteTask(task_id, email) {
     const text = "DELETE FROM tasks WHERE email = $2 AND id = $1;";
-    const values = [email, tasks_id];
+    const values = [email, task_id];
     return client.query(text, values);
 }
 
