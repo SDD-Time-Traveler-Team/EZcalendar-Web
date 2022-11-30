@@ -6,7 +6,7 @@ import Authentication from "../utils/Authentication";
 import {getAllTags, createTag, updateTag, deleteTag, createEvent, createTask} from "../utils/Database";
 import VirtualList from "rc-virtual-list";
 
-const TagMenu = ({setEvents, setTasks}) => {
+const TagMenu = ({setEvents, setTasks, fetchAllEventsAndTasks}) => {
     const auth = new Authentication();
     const [tags, setTags] = useState([]); // tag: {id, title, duration}
 
@@ -25,7 +25,7 @@ const TagMenu = ({setEvents, setTasks}) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+    }, [auth.email]);
 
     //handle creating tag in the tag section
     const onCreateTag = (tagTitle, tagDuration) => {
@@ -93,16 +93,7 @@ const TagMenu = ({setEvents, setTasks}) => {
         if (isEvent) {
             createEvent(auth.email, title, tag_id, "", startTime, endTime)
                 .then((res) => {
-                    setEvents((prev) => [
-                        ...prev,
-                        {
-                            id: res.data.id,
-                            tagId: res.data.tag_id,
-                            title: res.data.title,
-                            start: res.data.start_time,
-                            end: res.data.end_time
-                        },
-                    ]);
+                    fetchAllEventsAndTasks()
                 }).catch((err) => {
                 console.log(err);
             })
@@ -110,17 +101,7 @@ const TagMenu = ({setEvents, setTasks}) => {
         } else {
             createTask(auth.email, title, tag_id, "", startTime, endTime, false)
                 .then((res) => {
-                    setTasks((prev) => [
-                        ...prev,
-                        {
-                            id: res.data.id,
-                            tagId: res.data.tag_id,
-                            title: res.data.title,
-                            start: res.data.start_time,
-                            end: res.data.end_time,
-                            completed: res.data.completed
-                        },
-                    ]);
+                    fetchAllEventsAndTasks()
                 }).catch((err) => {
                     console.log(err)
             })
