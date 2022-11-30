@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+const APIURL = "http://release.d328iuwrgpwy3w.amplifyapp.com"
+
 export const getAllTags = async (email) => {
     return axios({
         method: 'get',
-        url: `http://localhost:4000/tags?email=${email}`,
+        url: `${APIURL}/tags?email=${email}`,
         headers: {
             'Content-Type': 'application/json'
         }
@@ -13,7 +15,7 @@ export const getAllTags = async (email) => {
 export const createTag = async (email, tagTitle, durationInMinutes) => {
     return axios({
         method: 'put',
-        url: 'http://localhost:4000/tags',
+        url: '${APIURL}/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -28,7 +30,7 @@ export const createTag = async (email, tagTitle, durationInMinutes) => {
 export const updateTag = async (email, tagId, tagTitle, durationInMinutes) => {
     return axios({
         method: 'post',
-        url: 'http://localhost:4000/tags',
+        url: '${APIURL}/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -44,7 +46,7 @@ export const updateTag = async (email, tagId, tagTitle, durationInMinutes) => {
 export const deleteTag = async (email, tagId) => {
     return axios({
         method: 'delete',
-        url: 'http://localhost:4000/tags',
+        url: '${APIURL}/tags',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -58,7 +60,7 @@ export const deleteTag = async (email, tagId) => {
 export const getAllEvents = async (email) => {
     return axios({
         method: 'get',
-        url: `http://localhost:4000/events?email=${email}`,
+        url: `${APIURL}/events?email=${email}`,
         headers: {
             'Content-Type': 'application/json'
         }
@@ -68,7 +70,7 @@ export const getAllEvents = async (email) => {
 export const createEvent = async (email, title, tagId, description = "", startTime, endTime) => {
     return axios({
         method: 'put',
-        url: 'http://localhost:4000/events',
+        url: '${APIURL}/events',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -86,7 +88,7 @@ export const createEvent = async (email, title, tagId, description = "", startTi
 export const updateEvent = async (eventId, email, title, tagId, description = "", startTime, endTime) => {
     return axios({
         method: 'post',
-        url: 'http://localhost:4000/events',
+        url: '${APIURL}/events',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -105,7 +107,7 @@ export const updateEvent = async (eventId, email, title, tagId, description = ""
 export const deleteEvent = async (email, eventId) => {
     return axios({
         method: 'delete',
-        url: 'http://localhost:4000/events',
+        url: '${APIURL}/events',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -119,7 +121,7 @@ export const deleteEvent = async (email, eventId) => {
 export const getAllTasks = async (email) => {
     return axios({
         method: 'get',
-        url: `http://localhost:4000/tasks?email=${email}`,
+        url: `${APIURL}/tasks?email=${email}`,
         headers: {
             'Content-Type': 'application/json'
         }
@@ -129,7 +131,7 @@ export const getAllTasks = async (email) => {
 export const createTask = async (email, title, tagId, description = "", startTime, endTime, completed) => {
     return axios({
         method: 'put',
-        url: 'http://localhost:4000/tasks',
+        url: '${APIURL}/tasks',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -148,7 +150,7 @@ export const createTask = async (email, title, tagId, description = "", startTim
 export const updateTask = async (taskId, email, title, tagId, description = "", startTime, endTime, completed) => {
     return axios({
         method: 'post',
-        url: 'http://localhost:4000/tasks',
+        url: '${APIURL}/tasks',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -168,7 +170,7 @@ export const updateTask = async (taskId, email, title, tagId, description = "", 
 export const deleteTask = async (email, taskId) => {
     return axios({
         method: 'delete',
-        url: 'http://localhost:4000/tasks',
+        url: '${APIURL}/tasks',
         headers: {
             'Content-Type': 'application/json'
         },
