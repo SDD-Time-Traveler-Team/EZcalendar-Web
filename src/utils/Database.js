@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const APIURL = "http://release.d328iuwrgpwy3w.amplifyapp.com"
+const APIURL = "http://release.d328iuwrgpwy3w.amplifyapp.com:4000"
 
 export const getAllTags = async (email) => {
     return axios({
