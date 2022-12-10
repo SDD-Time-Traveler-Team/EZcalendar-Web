@@ -28,7 +28,7 @@ We use PostgreSQL for the project's database. You'll need to set up your own Pos
 1. Create a PostgreSQL database on your local machine or a cloud service provider.
 
 2. Put key information of the database in environmental variables. You can do it in this way:
-   Create `.env` file under `/EZcalendar-Web` folder, and add the following lines to it.
+   Create a `.env` file under the `/EZcalendar-Web` folder, and add the following lines.
 
    ```
    DBUSER=your_database_user
@@ -37,5 +37,7 @@ We use PostgreSQL for the project's database. You'll need to set up your own Pos
    DBPASSWORD=your_database_password
    DBPORT=your_database_port
    ```
+
+   Remember to replace these values with your database server's information.
 
 3. To apply any changes, you need to restart the app.
